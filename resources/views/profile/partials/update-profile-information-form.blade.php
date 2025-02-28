@@ -24,6 +24,31 @@
         </div>
 
         <div>
+            <x-input-label for="city" :value="__('City')" />
+            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $user->profile->city)"  autofocus autocomplete="name" />
+            <x-input-error class="mt-2" :messages="$errors->get('city')" />
+        </div>
+
+        <div>
+            <x-input-label for="bio" :value="__('Bio')" />
+            <x-textarea id="bio" name="bio" class="mt-1 block w-full" rows="4" autofocus autocomplete="name">
+                {!! old('bio', $user->profile->bio) !!}
+            </x-textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('bio')" />
+        </div>
+
+
+        <div>
+            <x-input-label for="gender" :value="__('Gender')" />
+            <x-select-input id="gender" name="gender" class="mt-1 block w-full" required autofocus>
+                <option value="" disabled selected>Select an option</option>
+                <option value="1" {{ old('gender', $user->profile->gender) === 1 ? 'selected' : '' }}>Male</option>
+                <option value="0" {{ old('gender', $user->profile->gender) === 0 ? 'selected' : '' }}>Female</option>
+            </x-select-input>
+            <x-input-error class="mt-2" :messages="$errors->get('gender')" />
+        </div>
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -46,6 +71,7 @@
                 </div>
             @endif
         </div>
+
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
