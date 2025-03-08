@@ -39,5 +39,16 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <footer class="footer bg-white border-b border-gray-100 text-black text-center py-3" >
+            <div class="container d-flex justify-content-between align-items-center">
+                <span>&copy; 2025 Notes, All rights reserved. Powered by Youssef Hossam</span>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/youssefhossameldin29/" target="_blank" aria-label="linkedin" style="text-decoration:none"><i class="fa-brands fa-linkedin-in fa-lg"></i>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a href="http://wa.me/+201279932792" target="_blank" aria-label="Facebook" style="text-decoration:none"><i class="fab fa-whatsapp fa-lg"></i>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </div>
+            </div>
+        </footer>
+
     </body>
 </html>
