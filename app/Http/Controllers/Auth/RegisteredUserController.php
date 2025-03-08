@@ -49,6 +49,7 @@ class RegisteredUserController extends Controller
                 'bio' => NULL,
                 'city' => NULL,
                 'gender'=> NULL,
+                'image' => "user.png"
             ]);
         }
 

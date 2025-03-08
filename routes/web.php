@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,9 +27,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/notes', function(){
-        return 'hello world!';
-    })->name('notes');
+
+    Route::get('/my/notes', [NoteController::class, 'index'])->name('my.notes');
+    Route::get('/notes/trash', [NoteController::class, 'trash'])->name('notes.trash');
+    Route::get('/note/create', [NoteController::class, 'create'])->name('note.create');
+    Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
+    Route::get('/note/show/{slug}', [NoteController::class, 'show'])->name('note.show');
+    Route::get('/note/edit/{slug}', [NoteController::class, 'edit'])->name('note.edit');
+    Route::put('/note/update/{slug}', [NoteController::class, 'update'])->name('note.update');
+    Route::get('/note/soft/deletes/{slug}', [NoteController::class, 'softDelete'])->name('note.softdelete');
+    Route::get('/note/destroy/{slug}', [NoteController::class, 'destroy'])->name('note.destroy');
+    Route::get('/note/restore/{slug}', [NoteController::class, 'restore'])->name('note.restore');
 });
 
 require __DIR__.'/auth.php';

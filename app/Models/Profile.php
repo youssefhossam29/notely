@@ -14,6 +14,7 @@ class Profile extends Model
         'bio',
         'city',
         'gender',
+        'image',
     ];
 
     public function user(){

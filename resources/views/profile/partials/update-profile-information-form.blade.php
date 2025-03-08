@@ -13,9 +13,16 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <div>
+            <x-input-label for="image" :value="__('Image')" />
+            <img src="{{URL::asset('uploads/users/' . $user->profile->image)}}" class="w-20 h-20" alt="user image">
+            <x-file-input class="mt-1 block w-full" name="image"/>
+            <x-input-error class="mt-2" :messages="$errors->get('image')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -40,7 +47,7 @@
 
         <div>
             <x-input-label for="gender" :value="__('Gender')" />
-            <x-select-input id="gender" name="gender" class="mt-1 block w-full" required autofocus>
+            <x-select-input id="gender" name="gender" class="mt-1 block w-full" autofocus>
                 <option value="" disabled selected>Select an option</option>
                 <option value="1" {{ old('gender', $user->profile->gender) === 1 ? 'selected' : '' }}>Male</option>
                 <option value="0" {{ old('gender', $user->profile->gender) === 0 ? 'selected' : '' }}>Female</option>

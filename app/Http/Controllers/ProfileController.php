@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\File;
 
 class ProfileController extends Controller
 {
@@ -34,14 +35,28 @@ class ProfileController extends Controller
         }
 
         $user->save();
-
         if ($user->profile) {
             $user->profile->city = $request->city;
             $user->profile->bio = $request->bio;
             if($request->gender == 1 || $request->gender == 0){
                 $user->profile->gender = $request->gender;
             }
-            $user->profile->save();
+
+            $old_image = $user->profile->image;
+            if($request->hasfile('image')){
+                $image = $request->image;
+                $newImage = time() . $image->getClientOriginalName();
+                $image->move('uploads/users/', $newImage);
+                $user->profile->image = $newImage;
+            }
+            $profile = $user->profile->save();
+
+            if($profile && $old_image != "user.png" && $request->hasfile('image')){
+                $old_image = 'uploads/users/' . $old_image;
+                if (File::exists($old_image)) {
+                    File::delete($old_image);
+                }
+            }
         }
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
