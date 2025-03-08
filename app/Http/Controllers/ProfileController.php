@@ -38,9 +38,7 @@ class ProfileController extends Controller
         if ($user->profile) {
             $user->profile->city = $request->city;
             $user->profile->bio = $request->bio;
-            if($request->gender == 1 || $request->gender == 0){
-                $user->profile->gender = $request->gender;
-            }
+            $user->profile->gender = $request->gender;
 
             $old_image = $user->profile->image;
             if($request->hasfile('image')){

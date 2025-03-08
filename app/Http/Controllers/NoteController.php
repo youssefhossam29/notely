@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CreateNoteRequest;
+use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -44,18 +45,9 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateNoteRequest $request)
     {
         //
-        $validator = Validator::make($request->all(), [
-            'title' => "required|string|max:255",
-            'content' => "nullable|string",
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
         if($request->hasfile('image')){
             $image = $request->image;
@@ -114,23 +106,13 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $note_slug)
+    public function update(UpdateNoteRequest $request, $note_slug)
     {
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
             if ($note->user_id !== Auth::id()) {
                 abort(403, 'Unauthorized action.');
-            }
-
-            $validator = Validator::make($request->all(), [
-                'title' => "required|string|max:255",
-                'content' => "nullable|string",
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
             }
 
             if($request->hasfile('image')){

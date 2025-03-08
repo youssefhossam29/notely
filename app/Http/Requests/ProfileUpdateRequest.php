@@ -18,6 +18,18 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp|max:2048'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'gender' => ['nullable', 'boolean'],
+            'bio' => ['nullable', 'string'],
         ];
     }
+
+
+    public function messages(){
+        return [
+            'gender.boolean' => 'The gender field must be male or female.',
+        ];
+    }
+
 }
