@@ -77,7 +77,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id !== Auth::id()) {
+            if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
             return view('note.show')->with('note', $note);
@@ -94,7 +94,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id !== Auth::id()) {
+            if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
             return view('note.edit')->with('note', $note);
@@ -111,7 +111,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id !== Auth::id()) {
+            if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
 
@@ -153,7 +153,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id !== Auth::id()) {
+            if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
             $note->delete();
@@ -172,7 +172,7 @@ class NoteController extends Controller
         $note = Note::withTrashed()->where('slug', $note_slug)->first();
         $note_image = $note->image;
         if ($note) {
-            if ($note->user_id !== Auth::id()) {
+            if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
             $deleted = $note->forceDelete();
@@ -201,7 +201,7 @@ class NoteController extends Controller
         //
         $note = Note::withTrashed()->where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id !== Auth::id()) {
+            if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
             $note->restore();
