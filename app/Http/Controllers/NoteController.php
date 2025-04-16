@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\File;
 class NoteController extends Controller
 {
 
-    private function authorizeNote($note)
+    public function authorizeNote($note)
     {
         if ($note->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
@@ -50,6 +50,14 @@ class NoteController extends Controller
         return view('note.create');
     }
 
+
+    public function handleImageUpload($image)
+    {
+        $newImage = Str::random(10) . time() . $image->getClientOriginalName();
+        $image->move('uploads/notes/', $imageName);
+        return $imageName;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -58,9 +66,7 @@ class NoteController extends Controller
         //
 
         if($request->hasfile('image')){
-            $image = $request->image;
-            $newImage = time() . $image->getClientOriginalName();
-            $image->move('uploads/notes/', $newImage);
+            $newImage = $this->handleImageUpload($request->image);
         }
         $note = Note::create([
             'user_id' => Auth::id(),
@@ -119,13 +125,14 @@ class NoteController extends Controller
 
             $old_image = $note->image;
             if($request->hasfile('image')){
-                $old_image =  $note->image;
-                $image = $request->image;
-                $newImage = Str::random(10) . time() . $image->getClientOriginalName();
-                $image->move('uploads/notes/', $newImage);
+                $newImage = $this->handleImageUpload($request->image);
                 $note->image = $newImage;
             }
-
+            if($request->hasfile('image')){
+                $image = $request->image;
+                $newImage = time() . $image->getClientOriginalName();
+                $image->move('uploads/notes/', $newImage);
+            }
             $note->title = $request->title;
             $note->content = $request->content;
             $saved = $note->save();
