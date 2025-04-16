@@ -53,10 +53,11 @@ class NoteController extends Controller
 
     public function handleImageUpload($image)
     {
-        $newImage = Str::random(10) . time() . $image->getClientOriginalName();
+        $imageName = Str::random(10) . time() . $image->getClientOriginalName();
         $image->move('uploads/notes/', $imageName);
         return $imageName;
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -79,7 +80,7 @@ class NoteController extends Controller
         if ($note) {
             return redirect()->route("my.notes")->with('success', "Note added successfully");
         } else {
-            return redirect()->back()->with('error', "Can't create note");
+            return redirect()->back()->with('error', "Unable to create note");
         }
     }
 
@@ -128,11 +129,6 @@ class NoteController extends Controller
                 $newImage = $this->handleImageUpload($request->image);
                 $note->image = $newImage;
             }
-            if($request->hasfile('image')){
-                $image = $request->image;
-                $newImage = time() . $image->getClientOriginalName();
-                $image->move('uploads/notes/', $newImage);
-            }
             $note->title = $request->title;
             $note->content = $request->content;
             $saved = $note->save();
@@ -145,10 +141,10 @@ class NoteController extends Controller
                 }
             }
 
-            if($note){
+            if($saved){
                 return redirect()->back()->with('success', 'Note updated succefully');
             }else{
-                return redirect()->back()->with('error', "Can't update note");
+                return redirect()->back()->with('error', "Failed to update note");
             }
         }else {
             return redirect()->back()->with('error', 'Note not found');
