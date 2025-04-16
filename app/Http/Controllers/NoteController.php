@@ -115,20 +115,21 @@ class NoteController extends Controller
                 abort(403, 'Unauthorized action.');
             }
 
+            $old_image = $note->image;
             if($request->hasfile('image')){
                 $old_image =  $note->image;
                 $image = $request->image;
-                $newImage = time() . $image->getClientOriginalName();
+                $newImage = Str::random(10) . time() . $image->getClientOriginalName();
                 $image->move('uploads/notes/', $newImage);
                 $note->image = $newImage;
             }
 
             $note->title = $request->title;
             $note->content = $request->content;
-            $note = $note->save();
+            $saved = $note->save();
 
             //delete old image
-            if($note && isset($old_image)){
+            if($saved && $old_image){
                 $old_image = 'uploads/notes/' . $old_image;
                 if (File::exists($old_image)) {
                     File::delete($old_image);
@@ -170,11 +171,11 @@ class NoteController extends Controller
     {
         //
         $note = Note::withTrashed()->where('slug', $note_slug)->first();
-        $note_image = $note->image;
         if ($note) {
             if ($note->user_id != Auth::id()) {
                 abort(403, 'Unauthorized action.');
             }
+            $note_image = $note->image;
             $deleted = $note->forceDelete();
 
             if ($deleted) {
