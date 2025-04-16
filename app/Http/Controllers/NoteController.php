@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\File;
 
 class NoteController extends Controller
 {
+
+    private function authorizeNote($note)
+    {
+        if ($note->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -77,9 +85,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id != Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
+            $this->authorizeNote($note);
             return view('note.show')->with('note', $note);
         }else {
             return redirect()->back()->with('error', 'Note not found');
@@ -94,9 +100,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id != Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
+            $this->authorizeNote($note);
             return view('note.edit')->with('note', $note);
         }else {
             return redirect()->back()->with('error', 'Note not found');
@@ -111,9 +115,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id != Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
+            $this->authorizeNote($note);
 
             $old_image = $note->image;
             if($request->hasfile('image')){
@@ -154,9 +156,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id != Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
+            $this->authorizeNote($note);
             $note->delete();
             return redirect()->route("my.notes")->with('success', "Note moved to trash");
         }else {
@@ -172,9 +172,7 @@ class NoteController extends Controller
         //
         $note = Note::withTrashed()->where('slug', $note_slug)->first();
         if ($note) {
-            if ($note->user_id != Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
+            $this->authorizeNote($note);
             $note_image = $note->image;
             $deleted = $note->forceDelete();
 
@@ -202,9 +200,7 @@ class NoteController extends Controller
         //
         $note = Note::withTrashed()->where('slug', $note_slug)->first();
         if($note){
-            if ($note->user_id != Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
+            $this->authorizeNote($note);
             $note->restore();
             return redirect()->route("my.notes")->with('success', "Note restored successfully");
         }else{
