@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -17,6 +18,17 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        if($user->profile == null){
+            $user->profile()->create([
+                'user_id' => $user->id,
+                'bio' => NULL,
+                'city' => NULL,
+                'gender'=> NULL,
+                'image' => "user.png"
+            ]);
+            $user->refresh();
+        }
         return view('profile.edit', [
             'user' => Auth::user(),
         ]);
@@ -35,27 +47,27 @@ class ProfileController extends Controller
         }
 
         $user->save();
-        if ($user->profile) {
-            $user->profile->city = $request->city;
-            $user->profile->bio = $request->bio;
-            $user->profile->gender = $request->gender;
 
-            $old_image = $user->profile->image;
-            if($request->hasfile('image')){
-                $image = $request->image;
-                $newImage = time() . $image->getClientOriginalName();
-                $image->move('uploads/users/', $newImage);
-                $user->profile->image = $newImage;
-            }
-            $profile = $user->profile->save();
+        $user->profile->city = $request->city;
+        $user->profile->bio = $request->bio;
+        $user->profile->gender = $request->gender;
 
-            if($profile && $old_image != "user.png" && $request->hasfile('image')){
-                $old_image = 'uploads/users/' . $old_image;
-                if (File::exists($old_image)) {
-                    File::delete($old_image);
-                }
+        $old_image = $user->profile->image;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $newImage = Str::random(10) . time() . $image->getClientOriginalName();
+            $image->move('uploads/users/', $newImage);
+            $user->profile->image = $newImage;
+        }
+        $saved = $user->profile->save();
+
+        if($saved && $old_image != "user.png" && $request->hasfile('image')){
+            $old_image = 'uploads/users/' . $old_image;
+            if (File::exists($old_image)) {
+                File::delete($old_image);
             }
         }
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
