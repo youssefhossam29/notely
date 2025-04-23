@@ -17,7 +17,7 @@ class UserResource extends JsonResource
         //return parent::toArray($request);
         if ($this->profile->gender === null) {
             $gender = 'not selected';
-        } elseif ($this->profile->gender === 1) {
+        } elseif ($this->profile->gender == 1) {
             $gender = 'male';
         } else {
             $gender = 'female';

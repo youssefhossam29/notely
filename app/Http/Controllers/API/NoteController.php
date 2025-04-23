@@ -1,24 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Resources\NoteResource as NoteResource;
 
 use App\Models\Note;
-use Illuminate\Http\Request;
 use App\Http\Requests\CreateNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
-class NoteController extends Controller
+class NoteController extends BaseController
 {
-
+    //
     public function authorizeNote($note)
     {
         if ($note->user_id != Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            return $this->SendError("Unauthorized action", "Oops! you don't have permission to access this note", 403);
         }
     }
+
 
     /**
      * Display a listing of the resource.
@@ -26,8 +31,13 @@ class NoteController extends Controller
     public function index()
     {
         //
-        $notes = Note::where('user_id', Auth::id())->latest()->paginate(10);
-        return view('note.index')->with('notes', $notes);
+        $notes = Note::where('user_id', Auth::id())->latest()->get();
+        if($notes->count() > 0){
+            $notes = NoteResource::collection($notes);
+            return $this->SendResponse($notes, "Notes selected Successfully");
+        }else{
+            return $this->SendError("There is no notes yet!");
+        }
     }
 
 
@@ -37,17 +47,13 @@ class NoteController extends Controller
     public function trash()
     {
         //
-        $notes = Note::onlyTrashed()->where('user_id', Auth::id())->latest()->paginate(10);
-        return view('note.trash')->with('notes', $notes);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-        return view('note.create');
+        $notes = Note::onlyTrashed()->where('user_id', Auth::id())->latest()->get();
+        if($notes->count() > 0){
+            $notes = NoteResource::collection($notes);
+            return $this->SendResponse($notes, "Trashed notes selected Successfully");
+        }else{
+            return $this->SendError("There is no notes in trash!");
+        }
     }
 
 
@@ -78,9 +84,10 @@ class NoteController extends Controller
         ]);
 
         if ($note) {
-            return redirect()->route("my.notes")->with('success', "Note added successfully");
+            $note = new NoteResource($note);
+            return $this->SendResponse($note, "Note added Successfully");
         } else {
-            return redirect()->back()->with('error', "Unable to create note");
+            return $this->SendError("Unable to create note!");
         }
     }
 
@@ -91,11 +98,14 @@ class NoteController extends Controller
     {
         //
         $note = Note::where('slug', $note_slug)->first();
-        if($note){
-            $this->authorizeNote($note);
-            return view('note.show')->with('note', $note);
-        }else {
-            return redirect()->back()->with('error', 'Note not found');
+        if ($note) {
+            if ($response = $this->authorizeNote($note)) {
+                return $response;
+            }
+            $note = new NoteResource($note);
+            return $this->SendResponse($note, "Note selected Successfully");
+        } else {
+            return $this->SendError("Note not found!");
         }
     }
 
@@ -107,10 +117,13 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
-            return view('note.edit')->with('note', $note);
+            if ($response = $this->authorizeNote($note)) {
+                return $response;
+            }
+            $note = new NoteResource($note);
+            return $this->SendResponse($note, "Note selected Successfully");
         }else {
-            return redirect()->back()->with('error', 'Note not found');
+            return $this->SendError("Note not found!");
         }
     }
 
@@ -122,7 +135,9 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            if ($response = $this->authorizeNote($note)) {
+                return $response;
+            }
 
             $old_image = $note->image;
             if($request->hasfile('image')){
@@ -130,7 +145,7 @@ class NoteController extends Controller
                 $note->image = $newImage;
             }
             $note->title = $request->title;
-            $note->content = $request->content;
+            $note->content = ($request->has('content')) ? $request->content :  $note->content;
             $saved = $note->save();
 
             //delete old image
@@ -142,40 +157,47 @@ class NoteController extends Controller
             }
 
             if($saved){
-                return redirect()->back()->with('success', 'Note updated succefully');
+                $note = new NoteResource($note);
+                return $this->SendResponse($note, "Note updated Successfully");
             }else{
-                return redirect()->back()->with('error', "Failed to update note");
+                return $this->SendError("Failed to update note!");
             }
         }else {
-            return redirect()->back()->with('error', 'Note not found');
+            return $this->SendError("Note not found!");
         }
     }
 
-    /**
-     * Move the specified resource to trash.
-     */
-    public function softDelete($note_slug)
+
+
+
+
+    public function destroy($note_slug)
     {
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            if ($response = $this->authorizeNote($note)) {
+                return $response;
+            }
+
             $note->delete();
-            return redirect()->route("my.notes")->with('success', "Note moved to trash");
+            return $this->SendResponse("Note moved to trash", "Note moved to trash");
         }else {
-            return redirect()->back()->with('error', 'Note not found');
+            return $this->SendError("Note not found!");
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($note_slug)
+    public function delete($note_slug)
     {
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if ($note) {
-            $this->authorizeNote($note);
+            if ($response = $this->authorizeNote($note)) {
+                return $response;
+            }
             $note_image = $note->image;
             $deleted = $note->forceDelete();
 
@@ -186,12 +208,12 @@ class NoteController extends Controller
                         File::delete($note_image);
                     }
                 }
-                return redirect()->route('notes.trash')->with('success', 'Note deleted successfully');
+                return $this->SendResponse("Note deleted successfully", "Note deleted successfully");
             } else {
-                return redirect()->back()->with('error', 'Failed to delete the note');
+                return $this->SendError("Failed to delete the note!");
             }
         } else {
-            return redirect()->back()->with('error', 'Note not found');
+            return $this->SendError("Note not found!");
         }
     }
 
@@ -203,11 +225,14 @@ class NoteController extends Controller
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            if ($response = $this->authorizeNote($note)) {
+                return $response;
+            }
             $note->restore();
-            return redirect()->route("my.notes")->with('success', "Note restored successfully");
+            $note = new NoteResource($note);
+            return $this->SendResponse($note, "Note restored successfully");
         }else{
-            return redirect()->back()->with('error', 'Note not found');
+            return $this->SendError("Note not found!");
         }
 
     }
