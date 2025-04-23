@@ -49,8 +49,8 @@
             <x-input-label for="gender" :value="__('Gender')" />
             <x-select-input id="gender" name="gender" class="mt-1 block w-full" autofocus>
                 <option value="" disabled selected>Select an option</option>
-                <option value="1" {{ old('gender', $user->profile->gender) === 1 ? 'selected' : '' }}>Male</option>
-                <option value="0" {{ old('gender', $user->profile->gender) === 0 ? 'selected' : '' }}>Female</option>
+                <option value="1" {{ old('gender', $user->profile->gender) == 1 ? 'selected' : '' }}>Male</option>
+                <option value="0" {{ old('gender', $user->profile->gender) == 0 ? 'selected' : '' }}>Female</option>
             </x-select-input>
             <x-input-error class="mt-2" :messages="$errors->get('gender')" />
         </div>
