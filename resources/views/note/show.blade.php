@@ -14,12 +14,14 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="container">
                 @if ($message = Session::get('success'))
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
                         {{$message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @elseif ($message = Session::get('error'))
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         {{$message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
             </div>

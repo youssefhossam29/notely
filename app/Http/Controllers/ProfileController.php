@@ -68,7 +68,7 @@ class ProfileController extends Controller
             }
         }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('success', 'profile-updated');
     }
 
     /**
