@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(Auth::user()){
+        return redirect()->route('my.notes');
+    }else{
+        return view('welcome');
+    }
 });
 
 Route::get('/dashboard', function () {
