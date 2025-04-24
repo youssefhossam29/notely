@@ -26,13 +26,14 @@
                             @method('PUT')
                             <div style="margin: 15px">
                                 <x-input-label for="title" :value="__('Note Title')" />
-                                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" required autofocus autocomplete="title" value="{{$note->title}}" />
+                                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" required autofocus autocomplete="title"
+                                value="{{ old('title', $note->title) }}" />
                                 <x-input-error class="mt-2" :messages="$errors->get('title')" />
                             </div>
                             <div style="margin: 15px">
                                 <x-input-label for="content" :value="__('Note Content')" />
                                 <x-textarea id="content" name="content" class="mt-1 block w-full" rows="4" autofocus autocomplete="content">
-                                    {!! $note->content !!}
+                                    {!! old('content', $note->content) !!}
                                 </x-textarea>
                                 <x-input-error class="mt-2" :messages="$errors->get('content')" />
                             </div>

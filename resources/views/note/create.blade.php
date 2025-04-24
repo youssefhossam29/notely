@@ -26,12 +26,14 @@
                             @method('POST')
                             <div style="margin: 15px">
                                 <x-input-label for="title" :value="__('Note Title')" />
-                                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full"  required autofocus autocomplete="title" />
+                                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full"  required autofocus autocomplete="title" value="{{old('title')}}" />
                                 <x-input-error class="mt-2" :messages="$errors->get('title')" />
                             </div>
                             <div style="margin: 15px">
                                 <x-input-label for="content" :value="__('Note Content')" />
-                                <x-textarea id="content" name="content" class="mt-1 block w-full" rows="3" autofocus autocomplete="content"></x-textarea>
+                                <x-textarea id="content" name="content" class="mt-1 block w-full" rows="3" autofocus autocomplete="content">
+                                    {!! old('content') !!}
+                                </x-textarea>
                                 <x-input-error class="mt-2" :messages="$errors->get('content')" />
                             </div>
                             <div style="margin: 15px">
