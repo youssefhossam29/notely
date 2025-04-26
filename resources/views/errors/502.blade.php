@@ -1,6 +1,4 @@
-<head>
-    <title>Error 502 (Bad Gateway)!!</title>
-</head>
+@section('title', 'Error 502 (Bad Gateway)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

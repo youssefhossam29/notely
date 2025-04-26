@@ -1,6 +1,4 @@
-<head>
-    <title>Error 503 (Service Unavailable)!!</title>
-</head>
+@section('title', 'Error 503 (Service Unavailable)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

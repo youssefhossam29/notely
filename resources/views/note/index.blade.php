@@ -1,3 +1,4 @@
+@section('title', 'My Notes')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -47,15 +48,15 @@
                                             <td>
                                                 <div class="row">
                                                     <div class="col-sm">
-                                                        <a class="btn btn-primary" href="{{ route('note.show', $note->slug)}}" role="button"> <i class="fa-solid fa-eye"></i> Show</a>
+                                                        <a class="btn btn-outline-primary" href="{{ route('note.show', $note->slug)}}" role="button"> <i class="fa-solid fa-eye"></i> Show</a>
                                                     </div>
 
                                                     <div class="col-sm">
-                                                        <a class="btn btn-success" href="{{ route('note.edit', $note->slug)}}" role="button"> <i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                                                        <a class="btn btn-outline-success" href="{{ route('note.edit', $note->slug)}}" role="button"> <i class="fa-solid fa-pen-to-square"></i> Edit</a>
                                                     </div>
 
                                                     <div class="col-sm">
-                                                        <a class="btn btn-warning" href="{{ route('note.softdelete', $note->slug)}}" role="button"><i class="fa-solid fa-trash"></i> Delete</a>
+                                                        <a class="btn btn-outline-danger" href="{{ route('note.softdelete', $note->slug)}}" role="button"><i class="fa-solid fa-trash"></i> Delete</a>
                                                     </div>
                                                 </div>
                                             </td>

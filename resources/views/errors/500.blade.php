@@ -1,6 +1,4 @@
-<head>
-    <title>Error 500 (Internal Server Error)!!</title>
-</head>
+@section('title', 'Error 500 (Internal Server Error)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

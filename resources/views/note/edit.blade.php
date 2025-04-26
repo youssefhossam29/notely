@@ -1,3 +1,4 @@
+@section('title', 'Edit Note')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -47,7 +48,7 @@
                                 <input type="file" class="mt-1 block w-full" name="image" />
                                 <x-input-error class="mt-2" :messages="$errors->get('image')" />
                             </div>
-                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Update</button>
+                            <button type="submit" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i> Update</button>
                         </form>
                     </div>
 

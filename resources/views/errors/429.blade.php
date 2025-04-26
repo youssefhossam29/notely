@@ -1,6 +1,4 @@
-<head>
-    <title>Error 429 (Too Many Requests)!!</title>
-</head>
+@section('title', 'Error 429 (Too Many Requests)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

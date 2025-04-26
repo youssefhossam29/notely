@@ -1,6 +1,4 @@
-<head>
-    <title>Error 401 (Unauthorized)!!</title>
-</head>
+@section('title', 'Error 401 (Unauthorized)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

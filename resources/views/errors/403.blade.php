@@ -1,6 +1,4 @@
-<head>
-    <title>Error 403 (Forbidden)!!</title>
-</head>
+@section('title', 'Error 403 (Forbidden)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

@@ -1,6 +1,4 @@
-<head>
-    <title>Error 408 (Request Timeout)!!</title>
-</head>
+@section('title', 'Error 408 (Request Timeout)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

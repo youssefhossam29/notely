@@ -1,11 +1,12 @@
+@section('title', 'Note Details')
 <x-app-layout>
     <x-slot name="header">
         <div class="row">
             <div class="font-semibold text-xl text-gray-800 leading-tight">
                     {{$note->title}}
-                <a class="btn btn-success" href="{{ route('note.edit', $note->slug)}}" role="button"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                <a class="btn btn-outline-success" href="{{ route('note.edit', $note->slug)}}" role="button"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
 
-                <a class="btn btn-warning" href="{{ route('note.softdelete', $note->slug)}}" role="button"><i class="fa-solid fa-trash"></i> Delete</a>
+                <a class="btn btn-outline-danger" href="{{ route('note.softdelete', $note->slug)}}" role="button"><i class="fa-solid fa-trash"></i> Delete</a>
             </div>
         </div>
     </x-slot>

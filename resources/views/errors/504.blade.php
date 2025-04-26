@@ -1,6 +1,4 @@
-<head>
-    <title>Error 504 (Gateway Timeout)!!</title>
-</head>
+@section('title', 'Error 504 (Gateway Timeout)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

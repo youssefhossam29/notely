@@ -1,3 +1,4 @@
+@section('title', 'Create Note')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -45,7 +46,7 @@
                             </div>
 
                             <div style="margin: 15px">
-                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-square-plus"></i> Create</button>
+                                <button type="submit" class="btn btn-outline-primary"><i class="fa-solid fa-square-plus"></i> Create</button>
                             </div>
                         </form>
                     </div>

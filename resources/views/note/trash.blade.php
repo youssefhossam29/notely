@@ -1,3 +1,4 @@
+@section('title', 'Trashed Notes')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -49,11 +50,11 @@
                                             <td>
                                                 <div class="row">
                                                     <div class="col-sm">
-                                                        <a class="btn btn-success" href="{{ route('note.restore', $note->slug)}}" role="button"><i class="fa-solid fa-arrow-rotate-left"></i> Restore</a>
+                                                        <a class="btn btn-outline-success" href="{{ route('note.restore', $note->slug)}}" role="button"><i class="fa-solid fa-arrow-rotate-left"></i> Restore</a>
                                                     </div>
 
                                                     <div class="col-sm">
-                                                        <a class="btn btn-danger" href="{{ route('note.destroy', $note->slug)}}" role="button"><i class="fa-solid fa-trash-can"></i> Delete</a>
+                                                        <a class="btn btn-outline-danger" href="{{ route('note.destroy', $note->slug)}}" role="button"><i class="fa-solid fa-trash-can"></i> Delete</a>
                                                     </div>
                                                 </div>
                                             </td>

@@ -1,6 +1,4 @@
-<head>
-    <title>Error 404 (Not Found)!!</title>
-</head>
+@section('title', 'Error 404 (Not Found)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

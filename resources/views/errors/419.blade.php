@@ -1,6 +1,4 @@
-<head>
-    <title>Error 419 (Page Expired)!!</title>
-</head>
+@section('title', 'Error 419 (Page Expired)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />

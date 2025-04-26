@@ -1,6 +1,4 @@
-<head>
-    <title>Error 400 (Bad Request)!!</title>
-</head>
+@section('title', 'Error 400 (Bad Request)!!')
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
