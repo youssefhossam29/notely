@@ -50,7 +50,7 @@
                                             <td>
                                                 <div class="row">
                                                     <div class="col-sm">
-                                                        <a class="btn btn-outline-success" href="{{ route('note.restore', $note->slug)}}" role="button"><i class="fa-solid fa-arrow-rotate-left"></i> Restore</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ route('note.restore', $note->slug)}}" role="button"><i class="fa-solid fa-arrow-rotate-left"></i> Restore</a>
                                                     </div>
 
                                                     <div class="col-sm">

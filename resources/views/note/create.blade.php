@@ -46,7 +46,7 @@
                             </div>
 
                             <div style="margin: 15px">
-                                <button type="submit" class="btn btn-outline-primary"><i class="fa-solid fa-square-plus"></i> Create</button>
+                                <button type="submit" class="btn btn-outline-dark"><i class="fa-solid fa-plus"></i> Create</button>
                             </div>
                         </form>
                     </div>

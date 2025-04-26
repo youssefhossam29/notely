@@ -10,7 +10,8 @@
                     </a> --}}
 
                     <a href="{{ route('my.notes') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <img src="/uploads/logo/notelyheader.png" width="60px">
+
                     </a>
                 </div>
 
