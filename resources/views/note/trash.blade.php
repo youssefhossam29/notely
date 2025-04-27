@@ -54,7 +54,13 @@
                                                     </div>
 
                                                     <div class="col-sm">
-                                                        <a class="btn btn-outline-danger" href="{{ route('note.destroy', $note->slug)}}" role="button"><i class="fa-solid fa-trash-can"></i> Delete</a>
+                                                        {{-- <a class="btn btn-outline-danger" href="{{ route('note.destroy', $note->slug)}}" role="button"><i class="fa-solid fa-trash-can"></i> Delete</a> --}}
+                                                        <button type="button" class="btn btn-outline-danger delete-btn"
+                                                            data-bs-toggle = "modal"
+                                                            data-bs-target = "#deleteNoteModal"
+                                                            data-id = "{{$note->slug}}">
+                                                            <i class="fa-solid fa-trash-can"></i> Delete
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -69,4 +75,59 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="deleteNoteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"> Delete Note? </h5>
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        >
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p> You are about to delete this note forever.</p>
+                    <p> This Action Can't be reversed.</p>
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                        >
+                        Cancel
+                    </button>
+
+                    <form id="deleteForm" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">
+                            Delete Note
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            const deleteForm = document.getElementById('deleteForm');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(){
+                    const noteSlug = this.dataset.id;
+                    deleteForm.action = `/note/destroy/${noteSlug}`;
+                });
+            });
+        });
+    </script>
+
 </x-app-layout>

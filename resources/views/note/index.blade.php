@@ -56,7 +56,14 @@
                                                     </div>
 
                                                     <div class="col-sm">
-                                                        <a class="btn btn-outline-danger" href="{{ route('note.softdelete', $note->slug)}}" role="button"><i class="fa-solid fa-trash"></i> Delete</a>
+                                                        {{-- <a class="btn btn-outline-danger" href="{{ route('note.softdelete', $note->slug)}}" role="button"><i class="fa-solid fa-trash"></i> Delete</a> --}}
+                                                        <a class="btn btn-outline-danger delete-btn"
+                                                            href="#"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteNoteModal"
+                                                            data-id="{{ $note->slug }}">
+                                                            <i class="fa-solid fa-trash"></i> Delete
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -71,4 +78,53 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="deleteNoteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Delete Note?</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>You are about to move this note to trash.</p>
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">
+                        Move to trash
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const noteSlug = this.dataset.id;
+                    confirmDeleteBtn.href = `/note/soft/deletes/${noteSlug}`;
+                });
+            });
+        });
+    </script>
+
 </x-app-layout>

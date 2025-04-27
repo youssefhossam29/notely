@@ -47,6 +47,7 @@
                             Last Update at: {{ $note->updated_at->diffForHumans() }}
                         </div>
 
+                        <a href="{{route('my.notes')}}" class="btn btn-secondary"> Back to Notes</a>
                     </div>
                 </div>
             </div>

@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/note/edit/{slug}', [NoteController::class, 'edit'])->name('note.edit');
     Route::put('/note/update/{slug}', [NoteController::class, 'update'])->name('note.update');
     Route::get('/note/soft/deletes/{slug}', [NoteController::class, 'softDelete'])->name('note.softdelete');
-    Route::get('/note/destroy/{slug}', [NoteController::class, 'destroy'])->name('note.destroy');
+    Route::delete('/note/destroy/{slug}', [NoteController::class, 'destroy'])->name('note.destroy');
     Route::get('/note/restore/{slug}', [NoteController::class, 'restore'])->name('note.restore');
 });
 
