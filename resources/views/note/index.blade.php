@@ -61,7 +61,8 @@
                                                             href="#"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteNoteModal"
-                                                            data-id="{{ $note->slug }}">
+                                                            data-route = "{{route('note.softdelete', $note->slug)}}"
+                                                            >
                                                             <i class="fa-solid fa-trash"></i> Delete
                                                         </a>
                                                     </div>
@@ -120,8 +121,8 @@
 
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const noteSlug = this.dataset.id;
-                    confirmDeleteBtn.href = `/note/soft/deletes/${noteSlug}`;
+                    const deleteUrl = this.dataset.route;
+                    confirmDeleteBtn.href = deleteUrl;
                 });
             });
         });

@@ -58,8 +58,8 @@
                                                         <button type="button" class="btn btn-outline-danger delete-btn"
                                                             data-bs-toggle = "modal"
                                                             data-bs-target = "#deleteNoteModal"
-                                                            data-id = "{{$note->slug}}">
-                                                            <i class="fa-solid fa-trash-can"></i> Delete
+                                                            data-route = "{{route('note.destroy', $note->slug)}}"
+                                                        > <i class="fa-solid fa-trash-can"></i> Delete
                                                         </button>
                                                     </div>
                                                 </div>
@@ -123,8 +123,8 @@
 
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(){
-                    const noteSlug = this.dataset.id;
-                    deleteForm.action = `/note/destroy/${noteSlug}`;
+                    const deleteUrl = this.dataset.route;
+                    deleteForm.action = deleteUrl;
                 });
             });
         });
