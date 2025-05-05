@@ -1,5 +1,6 @@
 @section('title', 'Confirm Password')
 
+{!! NoCaptcha::renderJs() !!}
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
@@ -18,6 +19,15 @@
                             required autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <div class="wrap-input100 validate-input mt-4">
+            <div class="{{$errors->has('g-recaptcha-response')? 'has-error' : ''}}">
+                        {!! NoCaptcha::display() !!}
+            </div>
+            @if ($errors->has('g-recaptcha-response'))
+                <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2" />
+            @endif
         </div>
 
         <div class="flex justify-end mt-4">

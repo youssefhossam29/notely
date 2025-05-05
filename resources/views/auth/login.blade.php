@@ -1,5 +1,6 @@
 @section('title', 'Login')
 
+{!! NoCaptcha::renderJs() !!}
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -32,6 +33,15 @@
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>
+        </div>
+
+        <div class="wrap-input100 validate-input mt-4">
+            <div class="{{$errors->has('g-recaptcha-response')? 'has-error' : ''}}">
+                        {!! NoCaptcha::display() !!}
+            </div>
+            @if ($errors->has('g-recaptcha-response'))
+                <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2" />
+            @endif
         </div>
 
         <div class="flex items-center justify-end mt-4">

@@ -1,5 +1,6 @@
 @section('title', 'Register')
 
+{!! NoCaptcha::renderJs() !!}
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -39,6 +40,16 @@
                             name="password_confirmation" required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+
+        <div class="wrap-input100 validate-input mt-4">
+            <div class="{{$errors->has('g-recaptcha-response')? 'has-error' : ''}}">
+                        {!! NoCaptcha::display() !!}
+            </div>
+            @if ($errors->has('g-recaptcha-response'))
+                <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2" />
+            @endif
         </div>
 
         <div class="flex items-center justify-end mt-4">

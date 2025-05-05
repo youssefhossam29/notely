@@ -93,7 +93,7 @@
                 </a>
             </div>
 
-            <div class="inner-container">
+            <div class="inner-container" style="margin-bottom: 50px;">
                 {{ $slot }}
             </div>
         </div>
