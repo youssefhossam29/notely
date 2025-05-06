@@ -53,8 +53,17 @@ class AuthController extends BaseController
     }
 
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        if($validator->fails()){
+            return $this->SendError("validation error", $validator->errors());
+        }
+
         if(auth()->attempt(['email' => $request->email, 'password' => $request->password])){
             $token = auth()->user()->createToken('Laravel-10-Sanctum')->plainTextToken;
             $success['token'] = $token;
