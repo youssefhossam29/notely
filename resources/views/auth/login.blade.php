@@ -1,5 +1,6 @@
 @section('title', 'Login')
 
+{!! NoCaptcha::renderJs() !!}
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -36,8 +37,7 @@
 
         <div class="wrap-input100 validate-input mt-4">
             <div class="{{$errors->has('g-recaptcha-response')? 'has-error' : ''}}">
-                {!! NoCaptcha::renderJs() !!}
-                {!! NoCaptcha::display() !!}
+                        {!! NoCaptcha::display() !!}
             </div>
             @if ($errors->has('g-recaptcha-response'))
                 <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2" />
