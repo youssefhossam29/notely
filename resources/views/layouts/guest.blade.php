@@ -20,6 +20,9 @@
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -83,6 +86,20 @@
                 margin: 0 0 20px;
                 font-weight: bold;
             }
+
+            .input-wrapper {
+                position: relative;
+            }
+
+            .toggle-password {
+                position: absolute;
+                right: 10px;
+                top: 45px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                font-size: 18px;
+                color: #1f2937;
+            }
         </style>
     </head>
     <body class="font-sans text-gray-900 antialiased">
@@ -97,5 +114,22 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <script>
+            function togglePassword() {
+                const passwordInput = document.getElementById("password");
+                const toggleIcon = document.getElementById("toggleIcon");
+
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    toggleIcon.classList.remove("fa-eye");
+                    toggleIcon.classList.add("fa-eye-slash");
+                } else {
+                    passwordInput.type = "password";
+                    toggleIcon.classList.remove("fa-eye-slash");
+                    toggleIcon.classList.add("fa-eye");
+                }
+            }
+        </script>
     </body>
 </html>
