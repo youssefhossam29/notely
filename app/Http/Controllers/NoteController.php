@@ -129,6 +129,15 @@ class NoteController extends Controller
                 $newImage = $this->handleImageUpload($request->image);
                 $note->image = $newImage;
             }
+
+            if ($request->input('delete_image') == "delete" && $note->image) {
+                $imagePath = 'uploads/notes/' . $note->image;
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+                $note->image = null;
+            }
+
             $note->title = $request->title;
             $note->content = $request->content;
             $saved = $note->save();

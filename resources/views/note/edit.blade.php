@@ -21,18 +21,21 @@
                     </div>
                 @endif
             </div>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="container">
-                        <form action="{{route('note.update', $note->slug)}}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('note.update', $note->slug) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+
                             <div style="margin: 15px">
                                 <x-input-label for="title" :value="__('Note Title')" />
                                 <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" required autofocus autocomplete="title"
-                                value="{{ old('title', $note->title) }}" />
+                                    value="{{ old('title', $note->title) }}" />
                                 <x-input-error class="mt-2" :messages="$errors->get('title')" />
                             </div>
+
                             <div style="margin: 15px">
                                 <x-input-label for="content" :value="__('Note Content')" />
                                 <x-textarea id="content" name="content" class="mt-1 block w-full" rows="4" autofocus autocomplete="content">
@@ -40,20 +43,46 @@
                                 </x-textarea>
                                 <x-input-error class="mt-2" :messages="$errors->get('content')" />
                             </div>
+
                             <div style="margin: 15px">
                                 <x-input-label for="image" :value="__('Note Image')" />
-                                @if($note->image )
-                                    <img src="{{URL::asset('uploads/notes/' . $note->image)}}" alt="Note Image" style="max-height:300px;">
+
+                                @if ($note->image)
+                                    <div id="image-preview" style="margin-bottom: 10px; margin-top:10px">
+                                        <img src="{{ URL::asset('uploads/notes/' . $note->image) }}" alt="Note Image" style="max-height:300px; display:block;">
+                                    </div>
                                 @endif
-                                <input type="file" class="mt-1 block w-full" name="image" />
+
+                                <div style="display: flex; align-items: center; gap: 20px;">
+                                    @if ($note->image)
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteImage()">
+                                            <i class="fa-solid fa-trash"></i> Delete image
+                                        </button>
+                                    @endif
+                                    <input type="file" class="form-control" name="image" style="width: 250px; border:1px solid ; border-radius:10px; padding:5px" />
+                                </div>
+
+                                <input type="hidden" name="delete_image" id="delete_image" value="0" />
                                 <x-input-error class="mt-2" :messages="$errors->get('image')" />
                             </div>
-                            <button type="submit" class="btn btn-outline-success"><i class="fa-solid fa-pen-to-square"></i> Update</button>
+
+
+
+                            <button type="submit" class="btn btn-outline-success"> <i class="fa-solid fa-pen-to-square"></i> Update </button>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function deleteImage() {
+            const preview = document.getElementById('image-preview');
+            if (preview)
+                preview.style.display = 'none';
+
+            document.getElementById('delete_image').value = "delete";
+        }
+    </script>
 </x-app-layout>
