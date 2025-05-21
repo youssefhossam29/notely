@@ -55,18 +55,22 @@
 
                                 <div style="display: flex; align-items: center; gap: 20px;">
                                     @if ($note->image)
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteImage()">
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteImage()">
                                             <i class="fa-solid fa-trash"></i> Delete image
                                         </button>
                                     @endif
-                                    <input type="file" class="form-control" name="image" style="width: 250px; border:1px solid ; border-radius:10px; padding:5px" />
+                                    <label for="file-upload" class="btn btn-outline-primary btn-sm" style="cursor: pointer; padding: 5px 12px;">
+                                        <i class="fa-solid fa-upload"></i> {{ $note->image ? "Change Image" : "Upload Image"}}
+                                    </label>
+                                    <input id="file-upload" type="file" name="image" class="hidden-file-input" style="display:none;" />
+
+                                    <span id="file-name" style="font-size: 0.9rem; color: #555;">No file chosen</span>
+
                                 </div>
 
                                 <input type="hidden" name="delete_image" id="delete_image" value="0" />
                                 <x-input-error class="mt-2" :messages="$errors->get('image')" />
                             </div>
-
-
 
                             <button type="submit" class="btn btn-outline-success"> <i class="fa-solid fa-pen-to-square"></i> Update </button>
                         </form>
@@ -84,5 +88,12 @@
 
             document.getElementById('delete_image').value = "delete";
         }
+
+        const fileInput = document.getElementById('file-upload');
+        const fileName = document.getElementById('file-name');
+
+        fileInput.addEventListener('change', () => {
+            fileName.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file chosen';
+        });
     </script>
 </x-app-layout>
