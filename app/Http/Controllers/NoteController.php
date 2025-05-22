@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class NoteController extends Controller
 {
@@ -30,6 +31,23 @@ class NoteController extends Controller
         return view('note.index')->with('notes', $notes);
     }
 
+
+    public function search(Request $request)
+    {
+        //
+        $validator = Validator::make($request->all(), [
+            'search' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $search = $request->input('search');
+        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->latest()->paginate(10);
+
+        return view('note.index')->with('notes', $notes)->with('search', $search);
+    }
 
     /**
      * Display a listing of the trashed resource.

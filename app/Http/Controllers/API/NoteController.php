@@ -13,6 +13,7 @@ use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class NoteController extends BaseController
 {
@@ -40,6 +41,23 @@ class NoteController extends BaseController
         }
     }
 
+
+    public function search(Request $request)
+    {
+        //
+        $validator = Validator::make($request->all(), [
+            'search' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->SendError("Validation error", $validator->errors());
+        }
+
+        $search = $request->input('search');
+        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->latest()->get();
+        $notes = NoteResource::collection($notes);
+        return $this->SendResponse($notes, "Search results for $search");
+    }
 
     /**
      * Display a listing of the trashed resource.

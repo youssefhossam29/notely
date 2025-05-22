@@ -33,6 +33,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('trash/notes', [NoteController::class, 'trash'])->name('notes.trash');
     Route::get('restore/note/{id}', [NoteController::class, 'restore'])->name('note.restore');
     Route::get('delete/note/{id}', [NoteController::class, 'delete'])->name('note.delete');
+    Route::get('search/note/', [NoteController::class, 'search'])->name('note.search');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

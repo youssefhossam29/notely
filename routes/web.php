@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/note/soft/deletes/{slug}', [NoteController::class, 'softDelete'])->name('note.softdelete');
     Route::delete('/note/destroy/{slug}', [NoteController::class, 'destroy'])->name('note.destroy');
     Route::get('/note/restore/{slug}', [NoteController::class, 'restore'])->name('note.restore');
+    Route::get('/note/search', [NoteController::class, 'search'])->name('note.search');
 });
 
 require __DIR__.'/auth.php';

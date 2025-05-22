@@ -23,10 +23,36 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="container">
+                        <div class="row py-4">
+                            <div class="col-md-6">
+                                <h2><a href="{{ route('my.notes') }}" class="btn btn-outline-dark">Show All Notes</a></h2>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <form method="get" action="{{ route('note.search') }}">
+                                        <div class="input-group">
+                                            <input class="form-control" name="search" placeholder="Search..." value="{{ old('search', $search ?? '') }}">
+                                            <button type="submit" class="btn btn-dark">Search</button>
+                                        </div>
+                                    </form>
+
+                                    @error('search')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+
                     @if ( count($notes) == 0)
+                        <br>
                         <div class=" m-auto col-lg-6 col-md-12 alert alert-danger text-center d-flex justify-content-center">There is no notes </div>
                     @else
-                        <div class="container">
+                        <div class="container py-6">
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
