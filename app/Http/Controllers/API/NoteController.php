@@ -157,11 +157,22 @@ class NoteController extends BaseController
                 return $response;
             }
 
-            $old_image = $note->image;
+            $old_image = null;
             if($request->hasfile('image')){
                 $newImage = $this->handleImageUpload($request->image);
+                $old_image = $note->image;
                 $note->image = $newImage;
             }
+
+            if ($request->input('delete_image') == "delete" && $note->image) {
+                $imagePath = 'uploads/notes/' . $note->image;
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+                $old_image = $note->image;
+                $note->image = null;
+            }
+
             $note->title = $request->title;
             $note->content = ($request->has('content')) ? $request->content :  $note->content;
             $saved = $note->save();

@@ -142,9 +142,10 @@ class NoteController extends Controller
         if($note){
             $this->authorizeNote($note);
 
-            $old_image = $note->image;
+            $old_image = null;
             if($request->hasfile('image')){
                 $newImage = $this->handleImageUpload($request->image);
+                $old_image = $note->image;
                 $note->image = $newImage;
             }
 
@@ -153,6 +154,7 @@ class NoteController extends Controller
                 if (File::exists($imagePath)) {
                     File::delete($imagePath);
                 }
+                $old_image = $note->image;
                 $note->image = null;
             }
 
