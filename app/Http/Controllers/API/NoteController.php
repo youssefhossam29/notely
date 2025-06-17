@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Validator;
 class NoteController extends BaseController
 {
     //
-    public function authorizeNote($note)
-    {
-        if ($note->user_id != Auth::id()) {
-            return $this->SendError("Unauthorized action", "Oops! you don't have permission to access this note", 403);
-        }
-    }
+    // public function authorizeNote($note)
+    // {
+    //     if ($note->user_id != Auth::id()) {
+    //         return $this->SendError("Unauthorized action", "Oops! you don't have permission to access this note", 403);
+    //     }
+    // }
 
 
     /**
@@ -117,9 +117,7 @@ class NoteController extends BaseController
         //
         $note = Note::where('slug', $note_slug)->first();
         if ($note) {
-            if ($response = $this->authorizeNote($note)) {
-                return $response;
-            }
+            $this->authorize('view', $note);
             $note = new NoteResource($note);
             return $this->SendResponse($note, "Note selected Successfully");
         } else {
@@ -135,9 +133,7 @@ class NoteController extends BaseController
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($response = $this->authorizeNote($note)) {
-                return $response;
-            }
+            $this->authorize('update', $note);
             $note = new NoteResource($note);
             return $this->SendResponse($note, "Note selected Successfully");
         }else {
@@ -153,10 +149,7 @@ class NoteController extends BaseController
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($response = $this->authorizeNote($note)) {
-                return $response;
-            }
-
+            $this->authorize('update', $note);
             $old_image = null;
             if($request->hasfile('image')){
                 $newImage = $this->handleImageUpload($request->image);
@@ -205,10 +198,7 @@ class NoteController extends BaseController
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            if ($response = $this->authorizeNote($note)) {
-                return $response;
-            }
-
+            $this->authorize('delete', $note);
             $note->delete();
             return $this->SendResponse("Note moved to trash", "Note moved to trash");
         }else {
@@ -224,9 +214,7 @@ class NoteController extends BaseController
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if ($note) {
-            if ($response = $this->authorizeNote($note)) {
-                return $response;
-            }
+            $this->authorize('forceDelete', $note);
             $note_image = $note->image;
             $deleted = $note->forceDelete();
 
@@ -254,9 +242,7 @@ class NoteController extends BaseController
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if($note){
-            if ($response = $this->authorizeNote($note)) {
-                return $response;
-            }
+            $this->authorize('restore', $note);
             $note->restore();
             $note = new NoteResource($note);
             return $this->SendResponse($note, "Note restored successfully");

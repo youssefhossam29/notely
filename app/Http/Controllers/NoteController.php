@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Validator;
 class NoteController extends Controller
 {
 
-    public function authorizeNote($note)
-    {
-        if ($note->user_id != Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-    }
+    // public function authorizeNote($note)
+    // {
+    //     if ($note->user_id != Auth::id()) {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // }
 
     /**
      * Display a listing of the resource.
@@ -110,7 +110,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            $this->authorize('view', $note);
             return view('note.show')->with('note', $note);
         }else {
             return redirect()->back()->with('error', 'Note not found');
@@ -125,7 +125,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            $this->authorize('update', $note);
             return view('note.edit')->with('note', $note);
         }else {
             return redirect()->back()->with('error', 'Note not found');
@@ -140,8 +140,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
-
+            $this->authorize('update', $note);
             $old_image = null;
             if($request->hasfile('image')){
                 $newImage = $this->handleImageUpload($request->image);
@@ -188,7 +187,7 @@ class NoteController extends Controller
         //
         $note = Note::where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            $this->authorize('delete', $note);
             $note->delete();
             return redirect()->route("my.notes")->with('success', "Note moved to trash");
         }else {
@@ -204,7 +203,7 @@ class NoteController extends Controller
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if ($note) {
-            $this->authorizeNote($note);
+            $this->authorize('forceDelete', $note);
             $note_image = $note->image;
             $deleted = $note->forceDelete();
 
@@ -232,7 +231,7 @@ class NoteController extends Controller
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if($note){
-            $this->authorizeNote($note);
+            $this->authorize('restore', $note);
             $note->restore();
             return redirect()->route("my.notes")->with('success', "Note restored successfully");
         }else{
