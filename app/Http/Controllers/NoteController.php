@@ -27,7 +27,7 @@ class NoteController extends Controller
     public function index()
     {
         //
-        $notes = Note::latest()->paginate(9);
+        $notes = Note::where('user_id', Auth::id())->latest()->paginate(5);
         return view('note.index')->with('notes', $notes);
     }
 
@@ -44,7 +44,7 @@ class NoteController extends Controller
         }
 
         $search = $request->input('search');
-        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->latest()->paginate(10);
+        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->latest()->paginate(5);
 
         return view('note.index')->with('notes', $notes)->with('search', $search);
     }
