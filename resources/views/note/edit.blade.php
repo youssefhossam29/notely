@@ -1,7 +1,7 @@
 @section('title', 'Edit Note')
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="note-title font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Edit ') . $note->title }}
         </h2>
     </x-slot>
@@ -22,7 +22,7 @@
                 @endif
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="container">
                         <form action="{{ route('note.update', $note->slug) }}" method="POST" enctype="multipart/form-data">
@@ -45,7 +45,7 @@
                             </div>
 
                             <div style="margin: 15px">
-                                <x-input-label for="image" :value="__('Note Image')" />
+                                <x-input-label class="mb-2" for="image" :value="__('Note Image')" />
 
                                 @if ($note->image)
                                     <div id="image-preview" style="margin-bottom: 10px; margin-top:10px">
@@ -53,7 +53,7 @@
                                     </div>
                                 @endif
 
-                                <div style="display: flex; align-items: center; gap: 20px;">
+                                <div class="btn-container" style="display: flex; align-items: center; gap: 20px;">
                                     @if ($note->image)
                                         <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteImage()">
                                             <i class="fa-solid fa-trash"></i> Delete image
@@ -72,7 +72,11 @@
                                 <x-input-error class="mt-2" :messages="$errors->get('image')" />
                             </div>
 
-                            <button type="submit" class="btn btn-outline-success"> <i class="fa-solid fa-pen-to-square"></i> Update </button>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-outline-success" style="margin: 0 15px 0 0">
+                                    <i class="fa-solid fa-pen-to-square"></i> Update
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

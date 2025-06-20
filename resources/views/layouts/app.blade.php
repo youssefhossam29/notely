@@ -28,6 +28,30 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+
+        <style>
+            .note-title {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 3em;
+                line-height: 1.5em;
+            }
+
+            @media (max-width: 768px) {
+                .btn-container {
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                }
+
+                .btn-container > * {
+                    width: 100% !important;
+                }
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
