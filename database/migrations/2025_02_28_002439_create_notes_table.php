@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('content')->nullable();
             $table->string('image')->nullable();
             $table->string('slug');
+            $table->boolean('is_pinned')->nullable()->default(false);
             $table->timestamps();
             $table->SoftDeletes();
         });

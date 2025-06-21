@@ -27,7 +27,10 @@ class NoteController extends Controller
     public function index()
     {
         //
-        $notes = Note::where('user_id', Auth::id())->latest()->paginate(5);
+        $notes = Note::where('user_id', Auth::id())
+            ->orderBy('is_pinned', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(8);
         return view('note.index')->with('notes', $notes);
     }
 
@@ -44,7 +47,9 @@ class NoteController extends Controller
         }
 
         $search = $request->input('search');
-        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->latest()->paginate(5);
+        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->orderBy('is_pinned', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(9);
 
         return view('note.index')->with('notes', $notes)->with('search', $search);
     }
@@ -237,6 +242,18 @@ class NoteController extends Controller
         }else{
             return redirect()->back()->with('error', 'Note not found');
         }
+    }
 
+    public function togglePin(Request $request, $note_slug)
+    {
+        $note = Note::where('slug', $note_slug)->first();
+        if($note){
+            $this->authorize('update', $note);
+            $note->is_pinned = !$note->is_pinned;
+            $saved = $note->save();
+        }else {
+            return redirect()->back()->with('error', 'Note not found');
+        }
+        return response()->json(['success' => true]);
     }
 }

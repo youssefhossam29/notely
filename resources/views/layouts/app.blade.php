@@ -104,6 +104,9 @@
             }
         }
 
+        .toggle-pin-btn{
+            border: none;
+        }
     </style>
 </head>
 

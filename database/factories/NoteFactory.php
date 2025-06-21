@@ -34,6 +34,7 @@ class NoteFactory extends Factory
             'content' => fake()->paragraph,
             'image' =>  fake()->randomElement( ['note.png', null] ) ,
             'slug' =>  Str::random(10) . time(),
+            'is_pinned' => fake()->randomElement( [ false, true ] ),
             'created_at' => now(),
             'deleted_at' =>  fake()->randomElement( [now(), null] )
         ];
