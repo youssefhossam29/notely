@@ -62,16 +62,18 @@
                         <div class="container py-6">
                             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 custom-cols g-4">
                                 {{-- Add New Note Card --}}
-                                <div class="col">
-                                    <div class="card shadow-lg rounded-3 h-100 border-0 d-flex justify-content-center align-items-center text-center">
-                                        <a href="{{ route('note.create') }}" class="text-decoration-none text-muted">
-                                            <div>
-                                                <div class="display-4 mb-2">+</div>
-                                                <h5>Add new note</h5>
-                                            </div>
-                                        </a>
+                                @if (strpos(request()->fullUrl(), 'search') === false)
+                                    <div class="col">
+                                        <div class="card shadow-lg rounded-3 h-100 border-0 d-flex justify-content-center align-items-center text-center">
+                                            <a href="{{ route('note.create') }}" class="text-decoration-none text-muted">
+                                                <div>
+                                                    <div class="display-4 mb-2">+</div>
+                                                    <h5>Add new note</h5>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
 
                                 {{-- Existing Notes --}}
                                 @foreach ($notes as $note)
