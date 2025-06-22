@@ -8,7 +8,7 @@
             <h1>Too Many Requests</h1>
             <p>You've sent too many requests. Please wait a moment and try again.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>

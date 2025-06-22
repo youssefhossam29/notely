@@ -8,7 +8,7 @@
             <h1>Unauthorized</h1>
             <p>Oops! you're not authorized to view this page. Please log in or check your permissions.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>

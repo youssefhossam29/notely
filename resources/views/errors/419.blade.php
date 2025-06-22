@@ -8,7 +8,7 @@
             <h1>Page Expired</h1>
             <p>The page has expired due to inactivity. Please refresh and try again.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>

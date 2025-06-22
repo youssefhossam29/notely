@@ -8,7 +8,7 @@
             <h1>Service Unavailable</h1>
             <p>Service temporarily unavailable. Please check back soon.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>

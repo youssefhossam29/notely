@@ -31,13 +31,13 @@
                     <div class="container">
                         <div class="row py-4">
                             <div class="col-md-6 mt-2">
-                                <h2><a href="{{ route('my.notes') }}" class="btn btn-outline-dark">Show All Notes</a>
+                                <h2><a href="{{ route('notes.index') }}" class="btn btn-outline-dark">Show All Notes</a>
                                 </h2>
                             </div>
 
                             <div class="col-md-6 mt-2">
                                 <div class="form-group">
-                                    <form method="get" action="{{ route('note.search') }}">
+                                    <form method="get" action="{{ route('notes.search') }}">
                                         <div class="input-group">
                                             <input class="form-control" name="search" placeholder="Search..."
                                                 value="{{ old('search', $search ?? '') }}">
@@ -63,7 +63,7 @@
                                 <div class="col add-note-card">
                                     <div
                                         class="card shadow-lg rounded-3 h-100 border-0 d-flex justify-content-center align-items-center text-center">
-                                        <a href="{{ route('note.create') }}" class="text-decoration-none text-muted">
+                                        <a href="{{ route('notes.create') }}" class="text-decoration-none text-muted">
                                             <div>
                                                 <div class="display-4 mb-2">+</div>
                                                 <h5>Add new note</h5>
@@ -108,18 +108,18 @@
                                                 <p class="card-text text-muted small mb-2 mt-3">
                                                     {{ $note->created_at->format('F j, Y') }}</p>
                                                 <div class="d-flex justify-content-between gap-2 mt-3">
-                                                    <a href="{{ route('note.show', $note->slug) }}"
+                                                    <a href="{{ route('notes.show', $note->slug) }}"
                                                         class="btn btn-sm btn-outline-primary flex-fill">
                                                         <i class="fa-solid fa-eye"></i> Show
                                                     </a>
-                                                    <a href="{{ route('note.edit', $note->slug) }}"
+                                                    <a href="{{ route('notes.edit', $note->slug) }}"
                                                         class="btn btn-sm btn-outline-success flex-fill">
                                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                                     </a>
                                                     <a href="#"
                                                         class="btn btn-sm btn-outline-danger delete-btn flex-fill"
                                                         data-bs-toggle="modal" data-bs-target="#deleteNoteModal"
-                                                        data-route="{{ route('note.softdelete', $note->slug) }}">
+                                                        data-route="{{ route('notes.soft-delete', $note->slug) }}">
                                                         <i class="fa-solid fa-trash"></i> Delete
                                                     </a>
                                                 </div>
@@ -140,35 +140,45 @@
         </div>
     </div>
 
-    <div class="modal fade" id="deleteNoteModal" tabindex="-1">
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteNoteModal" tabindex="-1" aria-labelledby="deleteNoteModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">Delete Note?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+            <form method="POST" id="deleteNoteForm">
+                @csrf
+                @method('DELETE')
 
-                <div class="modal-body">
-                    <p>You are about to move this note to trash.</p>
-                </div>
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title">Delete Note?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Move to trash</a>
+                    <div class="modal-body">
+                        <p>You are about to move this note to trash.</p>
+                    </div>
+
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Move to trash</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const deleteButtons = document.querySelectorAll('.delete-btn');
-            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const deleteForm = document.getElementById('deleteNoteForm');
 
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const deleteUrl = this.dataset.route;
-                    confirmDeleteBtn.href = deleteUrl;
+                    deleteForm.action = deleteUrl;
                 });
             });
 
@@ -184,7 +194,7 @@
                     formData.append('_token', '{{ csrf_token() }}');
                     formData.append('_method', 'PUT');
 
-                    fetch(`/note/togglePin/${noteSlug}`, {
+                    fetch(`/notes/${noteSlug}/toggle-pin`, {
                             method: 'POST',
                             body: formData,
                             headers: {

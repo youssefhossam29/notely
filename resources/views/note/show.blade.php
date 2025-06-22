@@ -8,10 +8,10 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-shrink-0">
-                    <a class="btn btn-outline-success" href="{{ route('note.edit', $note->slug) }}" role="button">
+                    <a class="btn btn-outline-success" href="{{ route('notes.edit', $note->slug) }}" role="button">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
                     </a>
-                    <a class="btn btn-outline-danger" href="{{ route('note.softdelete', $note->slug) }}" role="button">
+                    <a class="btn btn-outline-danger" href="{{ route('notes.soft-delete', $note->slug) }}" role="button">
                         <i class="fa-solid fa-trash"></i> Delete
                     </a>
                 </div>
@@ -56,7 +56,7 @@
                             Last Update at: {{ $note->updated_at->diffForHumans() }}
                         </div>
 
-                        <a href="{{ route('my.notes') }}" class="btn btn-secondary"> Back to Notes</a>
+                        <a href="{{ route('notes.index') }}" class="btn btn-secondary"> Back to Notes</a>
                     </div>
                 </div>
             </div>

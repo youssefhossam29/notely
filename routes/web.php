@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,11 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    if(Auth::user()){
-        return redirect()->route('my.notes');
-    }else{
-        return view('welcome');
-    }
+    return Auth::check()
+        ? redirect()->route('notes.index')
+        : view('welcome');
 });
 
 Route::get('/dashboard', function () {
@@ -28,22 +26,26 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified', 'prevent-back'])->name('dashboard');
 
 Route::middleware(['prevent-back', 'auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/my/notes', [NoteController::class, 'index'])->name('my.notes');
-    Route::get('/notes/trash', [NoteController::class, 'trash'])->name('notes.trash');
-    Route::get('/note/create', [NoteController::class, 'create'])->name('note.create');
-    Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
-    Route::get('/note/show/{slug}', [NoteController::class, 'show'])->name('note.show');
-    Route::get('/note/edit/{slug}', [NoteController::class, 'edit'])->name('note.edit');
-    Route::put('/note/update/{slug}', [NoteController::class, 'update'])->name('note.update');
-    Route::get('/note/soft/deletes/{slug}', [NoteController::class, 'softDelete'])->name('note.softdelete');
-    Route::delete('/note/destroy/{slug}', [NoteController::class, 'destroy'])->name('note.destroy');
-    Route::get('/note/restore/{slug}', [NoteController::class, 'restore'])->name('note.restore');
-    Route::get('/note/search', [NoteController::class, 'search'])->name('note.search');
-    Route::put('/note/togglePin/{slug}', [NoteController::class, 'togglePin'])->name('note.togglePin');
+    // Profile Routes
+    Route::prefix('profile')->name('profile.')->controller(ProfileController::class)->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
+
+
+    // Notes Extra Routes
+    Route::prefix('notes')->name('notes.')->controller(NoteController::class)->group(function () {
+        Route::get('trash', 'trash')->name('trash');
+        Route::get('search', 'search')->name('search');
+        Route::put('{slug}/toggle-pin', 'togglePin')->name('toggle-pin');
+        Route::put('{slug}/restore', 'restore')->name('restore');
+        Route::delete('{slug}/soft-delete', 'softDelete')->name('soft-delete');
+    });
+
+    // Notes Resource Routes
+    Route::resource('notes', NoteController::class);
 });
 
 require __DIR__.'/auth.php';

@@ -37,7 +37,7 @@
                         <div class="container">
                             <div class="row py-4">
                                 <div class="col-md-6 mb-4 mt-2">
-                                    <h2><a href="{{ route('my.notes') }}" class="btn btn-outline-dark">Show All
+                                    <h2><a href="{{ route('notes.index') }}" class="btn btn-outline-dark">Show All
                                             Notes</a></h2>
                                 </div>
                                 <hr>
@@ -66,15 +66,16 @@
                                                                 <span class="text-danger">Deleted: {{ $note->deleted_at->format('F j, Y') }}</span>
                                                             </p>
                                                             <div class="d-flex justify-content-between gap-2 mt-3">
-                                                                <a href="{{ route('note.restore', $note->slug) }}"
-                                                                    class="btn btn-sm btn-outline-secondary flex-fill">
-                                                                    <i class="fa-solid fa-arrow-rotate-left"></i> Restore
-                                                                </a>
+                                                                <form method="POST" action="{{ route('notes.restore', $note->slug) }}" class="flex-fill">
+                                                                    @csrf
+                                                                    @method("PUT")
+                                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width: 100%"> <i class="fa-solid fa-arrow-rotate-left"></i> Restore </button>
+                                                                </form>
 
                                                                 <button type="button"
                                                                 class="btn btn-sm btn-outline-danger delete-btn flex-fill"
                                                                 data-bs-toggle="modal" data-bs-target="#deleteNoteModal"
-                                                                data-route="{{ route('note.destroy', $note->slug) }}">
+                                                                data-route="{{ route('notes.destroy', $note->slug) }}">
                                                                 <i class="fa-solid fa-trash-can"></i> Delete
                                                             </button>
                                                             </div>

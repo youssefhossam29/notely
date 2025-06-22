@@ -8,7 +8,7 @@
             <h1>Gateway Timeout</h1>
             <p>The server took too long to respond. Please try again later.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>

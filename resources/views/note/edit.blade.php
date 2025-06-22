@@ -25,7 +25,7 @@
             <div class="bg-white overflow-hidden shadow sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="container">
-                        <form action="{{ route('note.update', $note->slug) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('notes.update', $note->slug) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 

@@ -101,7 +101,7 @@ class NoteController extends Controller
         ]);
 
         if ($note) {
-            return redirect()->route("my.notes")->with('success', "Note added successfully");
+            return redirect()->route("notes.index")->with('success', "Note added successfully");
         } else {
             return redirect()->back()->with('error', "Unable to create note");
         }
@@ -194,7 +194,7 @@ class NoteController extends Controller
         if($note){
             $this->authorize('delete', $note);
             $note->delete();
-            return redirect()->route("my.notes")->with('success', "Note moved to trash");
+            return redirect()->route("notes.index")->with('success', "Note moved to trash");
         }else {
             return redirect()->back()->with('error', 'Note not found');
         }
@@ -238,7 +238,7 @@ class NoteController extends Controller
         if($note){
             $this->authorize('restore', $note);
             $note->restore();
-            return redirect()->route("my.notes")->with('success', "Note restored successfully");
+            return redirect()->route("notes.index")->with('success', "Note restored successfully");
         }else{
             return redirect()->back()->with('error', 'Note not found');
         }

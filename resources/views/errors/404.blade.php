@@ -8,7 +8,7 @@
             <h1>Page Not Found</h1>
             <p>Oops! The page you're looking for doesn't exist or has been moved.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
             <h1>Bad Request</h1>
             <p>Oops! Something went wrong with your request. Please try again.</p>
             <div class="welcome-buttons">
-                <a href="{{ route('my.notes') }}" class="btn btn-light loginbtn">Go Back Home</a>
+                <a href="{{ route('notes.index') }}" class="btn btn-light loginbtn">Go Back Home</a>
             </div>
         </div>
     </div>
