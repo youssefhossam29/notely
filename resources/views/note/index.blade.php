@@ -182,6 +182,7 @@
                     const formData = new FormData();
                     formData.append('is_pinned', newPinned);
                     formData.append('_token', '{{ csrf_token() }}');
+                    formData.append('_method', 'PUT');
 
                     fetch(`/note/togglePin/${noteSlug}`, {
                             method: 'POST',

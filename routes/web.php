@@ -43,7 +43,7 @@ Route::middleware(['prevent-back', 'auth'])->group(function () {
     Route::delete('/note/destroy/{slug}', [NoteController::class, 'destroy'])->name('note.destroy');
     Route::get('/note/restore/{slug}', [NoteController::class, 'restore'])->name('note.restore');
     Route::get('/note/search', [NoteController::class, 'search'])->name('note.search');
-    Route::post('/note/togglePin/{slug}', [NoteController::class, 'togglePin'])->name('note.togglePin');
+    Route::put('/note/togglePin/{slug}', [NoteController::class, 'togglePin'])->name('note.togglePin');
 });
 
 require __DIR__.'/auth.php';
