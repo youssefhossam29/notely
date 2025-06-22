@@ -245,9 +245,9 @@ class NoteController extends Controller
         }
     }
 
-    public function togglePin(Request $request, $note_slug)
+    public function togglePin($note_slug)
     {
-        $note = Note::where('slug', $note_slug)->first();
+        $note = Note::where('slug', "aaa")->first();
         if($note){
             $this->authorize('update', $note);
             $note->is_pinned = !$note->is_pinned;
@@ -255,6 +255,11 @@ class NoteController extends Controller
         }else {
             return redirect()->back()->with('error', 'Note not found');
         }
-        return response()->json(['success' => true]);
+
+        if($saved){
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 }

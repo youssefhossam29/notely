@@ -32,7 +32,10 @@ class NoteController extends BaseController
     public function index()
     {
         //
-        $notes = Note::where('user_id', Auth::id())->latest()->get();
+        $notes = Note::where('user_id', Auth::id())
+            ->orderBy('is_pinned', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->get();
         if($notes->count() > 0){
             $notes = NoteResource::collection($notes);
             return $this->SendResponse($notes, "Notes selected Successfully");
@@ -54,7 +57,9 @@ class NoteController extends BaseController
         }
 
         $search = $request->input('search');
-        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->latest()->get();
+        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->orderBy('is_pinned', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->get();
         $notes = NoteResource::collection($notes);
         return $this->SendResponse($notes, "Search results for $search");
     }
@@ -99,6 +104,7 @@ class NoteController extends BaseController
             'content' => $request->content,
             'image' => (isset($newImage))? $newImage:null,
             'slug' => Str::random(10) . request()->server('REQUEST_TIME'),
+            'is_pinned' => $request->is_pinned ? 1 : 0
         ]);
 
         if ($note) {
@@ -175,9 +181,6 @@ class NoteController extends BaseController
     }
 
 
-
-
-
     public function softDelete($note_slug)
     {
         //
@@ -236,4 +239,25 @@ class NoteController extends BaseController
         }
 
     }
+
+
+    public function togglePin($note_slug)
+    {
+        $note = Note::where('slug', $note_slug)->first();
+        if($note){
+            $this->authorize('update', $note);
+            $note->is_pinned = !$note->is_pinned;
+            $saved = $note->save();
+        }else{
+            return $this->SendError("Note not found!");
+        }
+
+        if($saved){
+            $note = new NoteResource($note);
+            return $this->SendResponse($note, "Success");
+        }else{
+            return $this->SendError("Failed!");
+        }
+    }
+
 }

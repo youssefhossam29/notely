@@ -22,6 +22,7 @@ class NoteResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'image' => ($this->image == null ) ? null: 'uploads/notes/' . $this->image,
+            'is_pinned' => $this->is_pinned ? 1 : 0,
             'deleted_at' => ($this->deleted_at == null ) ? null: $this->deleted_at->format('d/m/y'),
             'created_at' => $this->created_at->format('d/m/y'),
             'updated_at' => $this->updated_at->format('d/m/y'),

@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('trash', 'trash')->name('trash');
         Route::put('{slug}/restore', 'restore')->name('restore');
         Route::delete('{slug}/soft-delete', 'softDelete')->name('soft-delete');
+        Route::put('{slug}/toggle-pin', 'togglePin')->name('toggle-pin');
     });
 
     // Notes Resource Routes (RESTful)
