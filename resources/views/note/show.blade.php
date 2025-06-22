@@ -8,6 +8,12 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-shrink-0">
+                    <button type="button" class="btn btn-outline-primary toggle-pin-btn"
+                        data-note-id="{{ $note->slug }}" data-is-pinned="{{ $note->is_pinned ? 1 : 0 }}"
+                        title="{{ $note->is_pinned ? 'Unpin Note' : 'Pin Note' }}">
+                        <i class="fa-solid {{ $note->is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack' }}"></i>
+                    </button>
+
                     <a class="btn btn-outline-success" href="{{ route('notes.edit', $note->slug) }}" role="button">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
                     </a>
@@ -62,4 +68,55 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pinButton = document.querySelector('.toggle-pin-btn');
+
+            if (pinButton) {
+                pinButton.addEventListener('click', function() {
+                    const noteSlug = this.dataset.noteId;
+                    const isPinned = this.dataset.isPinned == "1" ? 1 : 0;
+                    const newPinned = isPinned === 1 ? 0 : 1;
+                    const currentButton = this;
+
+                    const formData = new FormData();
+                    formData.append('is_pinned', newPinned);
+                    formData.append('_token', '{{ csrf_token() }}');
+                    formData.append('_method', 'PUT');
+
+                    fetch(`/notes/${noteSlug}/toggle-pin`, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Server error');
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                const icon = currentButton.querySelector('i');
+                                icon.className = newPinned === 1 ?
+                                    'fa-solid fa-thumbtack-slash' :
+                                    'fa-solid fa-thumbtack';
+
+                                currentButton.dataset.isPinned = newPinned;
+                                currentButton.setAttribute('title', newPinned ? 'Unpin Note' :
+                                    'Pin Note');
+                            } else {
+                                alert('Failed to update pin status.');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error:', err);
+                            alert('Something went wrong. Please try again.');
+                        });
+                });
+            }
+        });
+    </script>
+
 </x-app-layout>
