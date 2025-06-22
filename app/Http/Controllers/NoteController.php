@@ -60,7 +60,7 @@ class NoteController extends Controller
     public function trash()
     {
         //
-        $notes = Note::onlyTrashed()->where('user_id', Auth::id())->latest()->paginate(10);
+        $notes = Note::onlyTrashed()->where('user_id', Auth::id())->latest()->paginate(9);
         return view('note.trash')->with('notes', $notes);
     }
 
