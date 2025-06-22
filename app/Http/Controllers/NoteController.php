@@ -98,6 +98,7 @@ class NoteController extends Controller
             'content' => $request->content,
             'image' => (isset($newImage))? $newImage:null,
             'slug' => Str::random(10) . request()->server('REQUEST_TIME'),
+            'is_pinned' => $request->is_pinned ? 1 : 0
         ]);
 
         if ($note) {

@@ -30,7 +30,7 @@
                             <div style="margin: 15px">
                                 <x-input-label for="title" :value="__('Note Title')" />
                                 <x-text-input id="title" name="title" type="text" class="mt-1 block w-full"
-                                    required autofocus autocomplete="title" value="{{ old('title') }}" />
+                                     autofocus autocomplete="title" value="{{ old('title') }}" />
                                 <x-input-error class="mt-2" :messages="$errors->get('title')" />
                             </div>
                             <div style="margin: 15px">
@@ -51,6 +51,16 @@
                                     style="display:none;" />
                                 <span id="file-name" style="font-size: 0.9rem; color: #555;">No file chosen</span>
                                 <x-input-error class="mt-2" :messages="$errors->get('image')" />
+                            </div>
+
+                            <div style="margin: 15px">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_pinned" name="is_pinned"
+                                        {{ old('is_pinned') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_pinned">
+                                        Pin Note
+                                    </label>
+                                </div>
                             </div>
 
                             <div class="text-end">
