@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController as AuthController;
-use App\Http\Controllers\API\NoteController as NoteController;
-use App\Http\Controllers\API\ProfileController as ProfileController;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\NoteController;
+use App\Http\Controllers\API\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,20 +22,35 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+// Public Routes
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::middleware('auth:api')->group(function(){
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('change-password', [AuthController::class, 'updatePassword'])->name('password.update');
+// Protected Routes
+Route::middleware('auth:sanctum')->group(function () {
 
-    Route::resource('note', NoteController::class);
-    Route::get('trash/notes', [NoteController::class, 'trash'])->name('notes.trash');
-    Route::get('restore/note/{id}', [NoteController::class, 'restore'])->name('note.restore');
-    Route::get('delete/note/{id}', [NoteController::class, 'delete'])->name('note.delete');
-    Route::get('search/note/', [NoteController::class, 'search'])->name('note.search');
+    //Auth Routes
+    Route::controller(AuthController::class)->name('auth.')->group(function () {
+        Route::post('logout', 'logout')->name('logout');
+        Route::put('password', 'updatePassword')->name('password.update');
+    });
 
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Notes Extra Routes
+    Route::prefix('notes')->controller(NoteController::class)->name('notes.')->group( function () {
+        Route::get('search', 'search')->name('search');
+        Route::get('trash', 'trash')->name('trash');
+        Route::put('{slug}/restore', 'restore')->name('restore');
+        Route::delete('{slug}/soft-delete', 'softDelete')->name('soft-delete');
+    });
+
+    // Notes Resource Routes (RESTful)
+    Route::apiResource('notes', NoteController::class);
+
+    // Profile Routes
+    Route::prefix('profile')->controller(ProfileController::class)->name('profile.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::put('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
 });
+

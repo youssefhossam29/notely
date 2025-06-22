@@ -125,21 +125,6 @@ class NoteController extends BaseController
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($note_slug)
-    {
-        //
-        $note = Note::where('slug', $note_slug)->first();
-        if($note){
-            $this->authorize('update', $note);
-            $note = new NoteResource($note);
-            return $this->SendResponse($note, "Note selected Successfully");
-        }else {
-            return $this->SendError("Note not found!");
-        }
-    }
 
     /**
      * Update the specified resource in storage.
@@ -193,7 +178,7 @@ class NoteController extends BaseController
 
 
 
-    public function destroy($note_slug)
+    public function softDelete($note_slug)
     {
         //
         $note = Note::where('slug', $note_slug)->first();
@@ -209,7 +194,7 @@ class NoteController extends BaseController
     /**
      * Remove the specified resource from storage.
      */
-    public function delete($note_slug)
+    public function destroy($note_slug)
     {
         //
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
