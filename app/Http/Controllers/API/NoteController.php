@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\NoteResource as NoteResource;
 
 use App\Models\Note;
+use App\Models\NoteImage;
+
 use App\Http\Requests\CreateNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Auth;
@@ -95,19 +97,26 @@ class NoteController extends BaseController
     {
         //
 
-        if($request->hasfile('image')){
-            $newImage = $this->handleImageUpload($request->image);
-        }
         $note = Note::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'content' => $request->content,
-            'image' => (isset($newImage))? $newImage:null,
             'slug' => Str::random(10) . request()->server('REQUEST_TIME'),
             'is_pinned' => $request->is_pinned ? 1 : 0
         ]);
 
         if ($note) {
+            if ($request->hasFile('images')) {
+                $noteImages = [];
+                foreach ($request->file('images') as $image) {
+                    $newImage = $this->handleImageUpload($image);
+                    $noteImages[] = [
+                        'note_id' => $note->id,
+                        'name' => $newImage,
+                    ];
+                }
+                $images = NoteImage::insert($noteImages);
+            }
             $note = new NoteResource($note);
             return $this->SendResponse($note, "Note added Successfully");
         } else {
@@ -139,45 +148,59 @@ class NoteController extends BaseController
     {
         //
         $note = Note::where('slug', $note_slug)->first();
-        if($note){
-            $this->authorize('update', $note);
-            $old_image = null;
-            if($request->hasfile('image')){
-                $newImage = $this->handleImageUpload($request->image);
-                $old_image = $note->image;
-                $note->image = $newImage;
-            }
 
-            if ($request->input('delete_image') == "delete" && $note->image) {
-                $imagePath = 'uploads/notes/' . $note->image;
-                if (File::exists($imagePath)) {
-                    File::delete($imagePath);
-                }
-                $old_image = $note->image;
-                $note->image = null;
-            }
-
-            $note->title = $request->title;
-            $note->content = ($request->has('content')) ? $request->content :  $note->content;
-            $saved = $note->save();
-
-            //delete old image
-            if($saved && $old_image){
-                $old_image = 'uploads/notes/' . $old_image;
-                if (File::exists($old_image)) {
-                    File::delete($old_image);
-                }
-            }
-
-            if($saved){
-                $note = new NoteResource($note);
-                return $this->SendResponse($note, "Note updated Successfully");
-            }else{
-                return $this->SendError("Failed to update note!");
-            }
-        }else {
+        if (!$note) {
             return $this->SendError("Note not found!");
         }
+
+        $this->authorize('update', $note);
+
+        $note->title = $request->title;
+        $note->content = ($request->has('content')) ? $request->content :  $note->content;
+        $saved = $note->save();
+
+        if($saved){
+
+            // Remove deleted images from storage
+            if ($request->has('delete_images') && $note->noteImages->count()) {
+                $imageIds = $request->delete_images;
+
+                $images = NoteImage::where('note_id', $note->id)
+                                ->whereIn('id', $imageIds)
+                                ->get();
+
+                foreach ($images as $image) {
+                    $path = 'uploads/notes/' . $image->name;
+                    if (File::exists($path) && $image->name != "note.png") {
+                        File::delete($path);
+                    }
+                }
+
+                NoteImage::where('note_id', $note->id)
+                        ->whereIn('id', $imageIds)
+                        ->delete();
+            }
+
+            // Upload new images
+            if ($request->hasFile('images')) {
+                $noteImages = [];
+                foreach ($request->file('images') as $image) {
+                    $newImage = $this->handleImageUpload($image);
+                    $noteImages[] = [
+                        'note_id' => $note->id,
+                        'name' => $newImage,
+                    ];
+                }
+                $images = NoteImage::insert($noteImages);
+            }
+
+            $note->refresh();
+            $note = new NoteResource($note);
+            return $this->SendResponse($note, "Note updated Successfully");
+        }else{
+            return $this->SendError("Failed to update note!");
+        }
+
     }
 
 
@@ -203,14 +226,16 @@ class NoteController extends BaseController
         $note = Note::onlyTrashed()->where('slug', $note_slug)->first();
         if ($note) {
             $this->authorize('forceDelete', $note);
-            $note_image = $note->image;
+            $note_images = $note->noteImages;
             $deleted = $note->forceDelete();
 
             if ($deleted) {
-                if($note_image){
-                    $note_image = 'uploads/notes/' . $note_image;
-                    if (File::exists($note_image)) {
-                        File::delete($note_image);
+                if($note_images->count()){
+                    foreach ($note_images as $image) {
+                        $path = 'uploads/notes/' . $image->name;
+                        if (File::exists($path) && $image->name != "note.png") {
+                            File::delete($path);
+                        }
                     }
                 }
                 return $this->SendResponse("Note deleted successfully", "Note deleted successfully");

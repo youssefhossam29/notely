@@ -21,7 +21,9 @@ class NoteResource extends JsonResource
             'user_name' => $this->user->name,
             'title' => $this->title,
             'content' => $this->content,
-            'image' => ($this->image == null ) ? null: 'uploads/notes/' . $this->image,
+            'images' => $this->noteImages->map(function ($image) {
+                return 'uploads/notes/' . $image->name;
+            }),
             'is_pinned' => $this->is_pinned ? 1 : 0,
             'deleted_at' => ($this->deleted_at == null ) ? null: $this->deleted_at->format('d/m/y'),
             'created_at' => $this->created_at->format('d/m/y'),
