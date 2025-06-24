@@ -22,7 +22,11 @@ class NoteResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'images' => $this->noteImages->map(function ($image) {
-                return 'uploads/notes/' . $image->name;
+            return [
+                    'id' => $image->id,
+                    'name' => $image->name,
+                    'url' => 'uploads/notes/' . $image->name,
+                ];
             }),
             'is_pinned' => $this->is_pinned ? 1 : 0,
             'deleted_at' => ($this->deleted_at == null ) ? null: $this->deleted_at->format('d/m/y'),
