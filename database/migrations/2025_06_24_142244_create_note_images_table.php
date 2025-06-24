@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('profiles', function (Blueprint $table) {
-            //
-            $table->string('image')->nullable()->after('user_id');
+        Schema::create('note_images', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('note_id')->constrained('notes')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -22,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('profiles', function (Blueprint $table) {
-            //
-            $table->dropColumn('image');
-        });
+        Schema::dropIfExists('note_images');
     }
 };

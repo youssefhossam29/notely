@@ -25,7 +25,7 @@ class CreateNoteRequest extends FormRequest
             //
             'title' => "required|string|max:255",
             'content' => "nullable|string",
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ];
     }
 }

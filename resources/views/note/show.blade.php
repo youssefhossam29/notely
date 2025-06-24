@@ -17,9 +17,14 @@
                     <a class="btn btn-outline-success" href="{{ route('notes.edit', $note->slug) }}" role="button">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
                     </a>
-                    <a class="btn btn-outline-danger" href="{{ route('notes.soft-delete', $note->slug) }}" role="button">
-                        <i class="fa-solid fa-trash"></i> Delete
-                    </a>
+
+                    <form method="POST" action="{{ route('notes.soft-delete', $note->slug) }}">
+                        @csrf
+                        @method("DELETE")
+                        <button class="btn btn-outline-danger" type="submit">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -43,23 +48,33 @@
             <div class="bg-white overflow-hidden shadow sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="container">
-                        <div class="mb-3">
-                            {!! $note->content !!}
+                        <div class="mb-4">
+                            <p style="word-wrap: break-word; font-size: 1rem; color: #333;">
+                                {{ $note->content }}
+                            </p>
                         </div>
-                        @if ($note->image)
-                            <div class="mb-3">
-                                {{-- <img src="{{ $note->featured }}" alt="Note Image" style="max-height:300px;"> --}}
-                                <img src="{{ URL::asset('uploads/notes/' . $note->image) }}" alt="Note Image"
-                                    style="max-height:300px;">
+
+                        @if ($noteImages && $noteImages->count())
+                            <div class="mb-4">
+                                <h5 class="mb-2"><b> Note Gallery </b></h5>
+                                <div class="gallery-grid">
+                                    @foreach ($noteImages as $image)
+                                        <a href="{{ asset('uploads/notes/' . $image->name) }}" class="glightbox" data-gallery="note-gallery">
+                                            <div class="gallery-item">
+                                                <img src="{{ asset('uploads/notes/' . $image->name) }}" alt="Note Image">
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
                             </div>
                         @endif
 
                         <div class="mb-3">
-                            Created at: {{ $note->created_at->diffForHumans() }}
+                            <b>Created at:</b> {{ $note->created_at->diffForHumans() }}
                         </div>
 
                         <div class="mb-3">
-                            Last Update at: {{ $note->updated_at->diffForHumans() }}
+                            <b>Last Update at:</b> {{ $note->updated_at->diffForHumans() }}
                         </div>
 
                         <a href="{{ route('notes.index') }}" class="btn btn-secondary"> Back to Notes</a>
@@ -119,4 +134,11 @@
         });
     </script>
 
+    <!-- Glightbox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script>
+        const lightbox = GLightbox({
+            selector: '.glightbox'
+        });
+    </script>
 </x-app-layout>

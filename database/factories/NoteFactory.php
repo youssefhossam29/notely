@@ -32,7 +32,7 @@ class NoteFactory extends Factory
             //
             'title' => fake()->unique()->word,
             'content' => fake()->paragraph,
-            'image' =>  fake()->randomElement( ['note.png', null] ) ,
+            // 'image' =>  fake()->randomElement( ['note.png', null] ) ,
             'slug' =>  Str::random(10) . time(),
             'is_pinned' => fake()->randomElement( [ false, true ] ),
             'created_at' => now(),

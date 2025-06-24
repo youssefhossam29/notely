@@ -23,4 +23,8 @@ class Note extends Model
     //     return asset('uploads/notes/' . $this->image);
     // }
 
+    public function noteImages(){
+        return $this->hasMany('App\Models\NoteImage');
+    }
+
 }

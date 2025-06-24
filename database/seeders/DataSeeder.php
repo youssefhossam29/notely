@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Profile;
+use App\Models\NoteImage;
 
 class DataSeeder extends Seeder
 {
@@ -20,7 +21,11 @@ class DataSeeder extends Seeder
         User::factory(10)->create()
             ->each(function ($user){
                 Note::factory(5)
-                ->create(['user_id' => $user->id]);
+                ->create(['user_id' => $user->id])
+                    ->each(function ($note){
+                    NoteImage::factory(4)
+                    ->create(['note_id' => $note->id]);
+                });
             })
             ->each(function ($user){
                 Profile::factory(1)
