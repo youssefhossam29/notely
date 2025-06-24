@@ -48,7 +48,11 @@ class NoteController extends Controller
         }
 
         $search = $request->input('search');
-        $notes = Note::where('user_id', Auth::id())->where('title', 'LIKE', "%{$search}%")->orderBy('is_pinned', 'DESC')
+        $notes = Note::where('user_id', Auth::id())->where(function($query) use ($search) {
+            $query->where('title', 'LIKE', "%{$search}%")
+                ->orWhere('content', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('is_pinned', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate(9);
 
