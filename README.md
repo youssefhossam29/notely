@@ -102,7 +102,7 @@ Follow these steps to set up and run **Notely**:
 
 To enable **Login with Google**, follow these steps:
 
-1. Go to [Google Cloud Console](w).
+1. Go to [Google Cloud Console](https://console.cloud.google.com/).
 
 2. Create a new project or use an existing one.
 
@@ -128,7 +128,7 @@ To enable **Login with Google**, follow these steps:
 
 To use **Google reCAPTCHA**, follow these steps:
 
-1. Go to [Google reCAPTCHA Admin Console](w).
+1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin).
 2. Register a new site (choose reCAPTCHA v2).
 3. In your `.env` file, add:
 
