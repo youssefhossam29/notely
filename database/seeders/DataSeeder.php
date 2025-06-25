@@ -17,13 +17,13 @@ class DataSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create 10 users and create 5 notes foreach user
-        User::factory(10)->create()
+        // Create 5 users and create 5 notes foreach user
+        User::factory(5)->create()
             ->each(function ($user){
                 Note::factory(5)
                 ->create(['user_id' => $user->id])
                     ->each(function ($note){
-                    NoteImage::factory(4)
+                    NoteImage::factory(2)
                     ->create(['note_id' => $note->id]);
                 });
             })
