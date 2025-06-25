@@ -61,7 +61,7 @@ class ProfileController extends Controller
         }
         $saved = $user->profile->save();
 
-        if($saved && $old_image != "user.png" && $request->hasfile('image')){
+        if($saved && $old_image != "user.png" && $request->hasfile('image') && !Str::startsWith($old_image, 'https://')){
             $old_image = 'uploads/users/' . $old_image;
             if (File::exists($old_image)) {
                 File::delete($old_image);

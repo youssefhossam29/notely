@@ -43,7 +43,7 @@ class AuthController extends BaseController
                 'gender'=> NULL,
                 'image' => "user.png"
             ]);
-            $token = $user->createToken('LaravelPassport')->plainTextToken;
+            $token = $user->createToken('Laravel-10-Sanctum')->plainTextToken;
             $success['token'] = $token;
             $success['user'] = new UserResource($user);
             return $this->SendResponse($success, "User Login Successfully");

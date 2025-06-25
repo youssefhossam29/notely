@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Illuminate\Support\Str;
 class UserResource extends JsonResource
 {
     /**
@@ -23,11 +23,17 @@ class UserResource extends JsonResource
             $gender = 'female';
         }
 
+        if(Str::startsWith($this->profile->image, 'https://')){
+            $image = $this->profile->image;
+        }else{
+            $image = 'uploads/users/' .$this->profile->image;
+        }
+
         return[
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'image' => 'uploads/users/' .$this->profile->image,
+            'image' => $image,
             'bio' => $this->profile->bio,
             'city' => $this->profile->city,
             'gender' => $gender,

@@ -63,4 +63,24 @@
             </x-primary-button>
         </div>
     </form>
+
+    <div class="relative my-6 mt-4">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+            <span class="bg-white px-2 text-gray-500">
+                {{ __('Or') }}
+            </span>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-center mt-4">
+        <a href="{{ route('auth.google.redirect') }}"
+        class="flex items-center justify-center w-full sm:w-auto border border-gray-300 rounded-md shadow-sm px-4 py-2 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 transition duration-150 ease-in-out">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="w-5 h-5 mr-2">
+            {{ __("Sign in with Google") }}
+        </a>
+    </div>
+
 </x-guest-layout>

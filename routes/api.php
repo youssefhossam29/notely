@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\NoteController;
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\GoogleAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Public Routes
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+
+// Google Auth Routes
+Route::post('auth/google/callback', [GoogleAuthController::class, 'callBack'])->name('auth.google.callback');
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {

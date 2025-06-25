@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 /*
@@ -46,6 +47,12 @@ Route::middleware(['prevent-back', 'auth'])->group(function () {
 
     // Notes Resource Routes
     Route::resource('notes', NoteController::class);
+});
+
+// Google Auth Routes
+Route::prefix('auth/google/')->name('auth.google.')->controller(GoogleAuthController::class)->group(function () {
+    Route::get('redirect', 'redirect')->name('redirect');
+    Route::get('callback', 'callBack')->name('callback');
 });
 
 require __DIR__.'/auth.php';

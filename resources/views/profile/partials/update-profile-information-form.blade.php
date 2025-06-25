@@ -19,8 +19,22 @@
 
         <div>
             <x-input-label for="image" :value="__('Image')" />
-            <img src="{{URL::asset('uploads/users/' . $user->profile->image)}}" class="w-20 h-20" alt="user image">
-            <x-file-input class="mt-1 block w-full" name="image"/>
+            @php
+                use Illuminate\Support\Str;
+            @endphp
+
+            @if(Str::startsWith($user->profile->image, 'https://'))
+                <img src="{{ $user->profile->image }}" class="mt-2 mb-2" alt="user image" style="border-radius: 99px; width: 100px; height: 100px">
+            @else
+                <img src="{{ URL::asset('uploads/users/' . $user->profile->image) }}" class="mt-2 mb-2" alt="user image" style="border-radius: 99px; width: 100px; height: 100px">
+            @endif
+
+            <label for="custom-image-upload" class="btn btn-outline-primary btn-sm" style="cursor: pointer;">
+                <i class="fa-solid fa-upload"></i> {{ __('Upload Image') }}
+            </label>
+            <input id="custom-image-upload" type="file" name="image" accept="image/*" class="d-none" style="display: none;" onchange="updateFileName(this)" />
+            <span id="selected-image-name" class="d-block mt-2 text-sm text-muted">No file chosen</span>
+
             <x-input-error class="mt-2" :messages="$errors->get('image')" />
         </div>
 
@@ -94,4 +108,11 @@
             @endif
         </div>
     </form>
+
+    <script>
+        function updateFileName(input) {
+            const fileNameSpan = document.getElementById('selected-image-name');
+            fileNameSpan.innerText = input.files.length ? input.files[0].name : 'No file chosen';
+        }
+    </script>
 </section>
