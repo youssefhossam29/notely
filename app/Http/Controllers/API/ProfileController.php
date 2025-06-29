@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Validator;
@@ -15,23 +14,25 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ProfileController extends BaseController
+class ProfileController extends Controller
 {
     //
     public function show(){
         $user = Auth::user();
-        if($user->profile == null){
+
+        if ($user->profile == null) {
             $user->profile()->create([
                 'user_id' => $user->id,
-                'bio' => NULL,
-                'city' => NULL,
-                'gender'=> NULL,
+                'bio' => null,
+                'city' => null,
+                'gender' => null,
                 'image' => "user.png"
             ]);
             $user->refresh();
         }
+
         $user = new UserResource($user);
-        return $this->SendResponse($user, "User selected Successfully");
+        return apiResponse($user, "User profile fetched successfully", 200);
     }
 
 
@@ -48,14 +49,10 @@ class ProfileController extends BaseController
 
         $user->profile->city = $request->city;
         $user->profile->bio = $request->bio;
-       // $user->profile->gender = $request->gender;
 
-        if($request->gender == null){
-            $user->profile->gender = $user->profile->gender;
-        }else{
+        if($request->gender !== null) {
             $user->profile->gender = $request->gender;
         }
-
 
         $old_image = $user->profile->image;
         if ($request->hasFile('image')) {
@@ -74,7 +71,7 @@ class ProfileController extends BaseController
         }
 
         $user = new UserResource($user);
-        return $this->SendResponse($user, "Profile updated Successfully");
+        return apiResponse($user, "Profile updated successfully.", 200);
     }
 
 
@@ -87,13 +84,13 @@ class ProfileController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->SendError("validation error", $validator->errors());
+            return apiResponse("validation error", $validator->errors(), 422);
         }
 
         $user = $request->user(); //
         $user->tokens()->delete();
         $user->delete();
-        return $this->SendResponse("Account deleted Successfully", "Account deleted Successfully");
+        return apiResponse([], "Account deleted Successfully", 200);
     }
 
 }

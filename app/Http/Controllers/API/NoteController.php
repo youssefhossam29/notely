@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\NoteResource as NoteResource;
@@ -17,7 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
-class NoteController extends BaseController
+class NoteController extends Controller
 {
     //
     // public function authorizeNote($note)
@@ -33,17 +32,17 @@ class NoteController extends BaseController
      */
     public function index()
     {
-        //
         $notes = Note::where('user_id', Auth::id())
             ->orderBy('is_pinned', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->get();
-        if($notes->count() > 0){
-            $notes = NoteResource::collection($notes);
-            return $this->SendResponse($notes, "Notes selected Successfully");
-        }else{
-            return $this->SendError("There is no notes yet!");
+
+        if ($notes->isEmpty()) {
+            return apiResponse([], "No notes found.", 200);
         }
+
+        $notes = NoteResource::collection($notes);
+        return apiResponse($notes, "Notes fetched successfully.", 200);
     }
 
 
@@ -55,7 +54,7 @@ class NoteController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->SendError("Validation error", $validator->errors());
+            return apiResponse("Validation error", $validator->errors(), 422);
         }
 
         $search = $request->input('search');
@@ -66,8 +65,12 @@ class NoteController extends BaseController
             ->orderBy('is_pinned', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->get();
+
+        if ($notes->isEmpty()) {
+            return apiResponse([], "No results found for: $search", 200);
+        }
         $notes = NoteResource::collection($notes);
-        return $this->SendResponse($notes, "Search results for $search");
+        return apiResponse($notes, "Search results for: $search", 200);
     }
 
     /**
@@ -77,12 +80,12 @@ class NoteController extends BaseController
     {
         //
         $notes = Note::onlyTrashed()->where('user_id', Auth::id())->latest()->get();
-        if($notes->count() > 0){
-            $notes = NoteResource::collection($notes);
-            return $this->SendResponse($notes, "Trashed notes selected Successfully");
-        }else{
-            return $this->SendError("There is no notes in trash!");
+        if ($notes->isEmpty()) {
+            return apiResponse([], "There is no notes in trash!", 200);
         }
+
+        $notes = NoteResource::collection($notes);
+        return apiResponse($notes, "Trashed notes fetched successfully.", 200);
     }
 
 
@@ -100,7 +103,6 @@ class NoteController extends BaseController
     public function store(CreateNoteRequest $request)
     {
         //
-
         $note = Note::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
@@ -122,9 +124,9 @@ class NoteController extends BaseController
                 $images = NoteImage::insert($noteImages);
             }
             $note = new NoteResource($note);
-            return $this->SendResponse($note, "Note added Successfully");
+            return apiResponse($note, "Note created successfully.", 201);
         } else {
-            return $this->SendError("Unable to create note!");
+            return apiResponse([], "Can't create note. Please try again later.", 500);
         }
     }
 
@@ -138,9 +140,9 @@ class NoteController extends BaseController
         if ($note) {
             $this->authorize('view', $note);
             $note = new NoteResource($note);
-            return $this->SendResponse($note, "Note selected Successfully");
+            return apiResponse($note, "Note fetched successfully.", 200);
         } else {
-            return $this->SendError("Note not found!");
+            return apiResponse([], "Note not found!", 404);
         }
     }
 
@@ -154,7 +156,7 @@ class NoteController extends BaseController
         $note = Note::where('slug', $note_slug)->first();
 
         if (!$note) {
-            return $this->SendError("Note not found!");
+            return apiResponse([], "Note not found!", 404);
         }
 
         $this->authorize('update', $note);
@@ -200,11 +202,10 @@ class NoteController extends BaseController
 
             $note->refresh();
             $note = new NoteResource($note);
-            return $this->SendResponse($note, "Note updated Successfully");
+            return apiResponse($note, "Note updated successfully.", 200);
         }else{
-            return $this->SendError("Failed to update note!");
+            return apiResponse([], "Failed to update note!", 500);
         }
-
     }
 
 
@@ -215,9 +216,9 @@ class NoteController extends BaseController
         if($note){
             $this->authorize('delete', $note);
             $note->delete();
-            return $this->SendResponse("Note moved to trash", "Note moved to trash");
+            return apiResponse([], "Note moved to trash", 200);
         }else {
-            return $this->SendError("Note not found!");
+            return apiResponse([], "Note not found!", 404);
         }
     }
 
@@ -242,12 +243,12 @@ class NoteController extends BaseController
                         }
                     }
                 }
-                return $this->SendResponse("Note deleted successfully", "Note deleted successfully");
+                return apiResponse([], "Note deleted successfully", 200);
             } else {
-                return $this->SendError("Failed to delete the note!");
+                return apiResponse([], "Failed to update note!", 500);
             }
         } else {
-            return $this->SendError("Note not found!");
+            return apiResponse([], "Note not found!", 404);
         }
     }
 
@@ -262,11 +263,10 @@ class NoteController extends BaseController
             $this->authorize('restore', $note);
             $note->restore();
             $note = new NoteResource($note);
-            return $this->SendResponse($note, "Note restored successfully");
+            return apiResponse($note, "Note restored successfully", 200);
         }else{
-            return $this->SendError("Note not found!");
+            return apiResponse([], "Note not found!", 404);
         }
-
     }
 
 
@@ -278,14 +278,14 @@ class NoteController extends BaseController
             $note->is_pinned = !$note->is_pinned;
             $saved = $note->save();
         }else{
-            return $this->SendError("Note not found!");
+            return apiResponse([], "Note not found!", 404);
         }
 
         if($saved){
             $note = new NoteResource($note);
-            return $this->SendResponse($note, "Success");
+            return apiResponse($note, "Success!", 200);
         }else{
-            return $this->SendError("Failed!");
+            return apiResponse([], "Failed!", 500);
         }
     }
 

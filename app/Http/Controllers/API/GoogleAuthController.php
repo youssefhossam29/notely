@@ -1,22 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use App\Http\Controllers\API\BaseController as BaseController;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Profile;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Resources\UserResource as UserResource;
-use Laravel\Socialite\Two\InvalidStateException;
 use Illuminate\Support\Facades\Hash;
 
-class GoogleAuthController extends BaseController
+class GoogleAuthController extends Controller
 {
-    //
     public function callBack(Request $request)
     {
         $request->validate([
@@ -27,8 +23,8 @@ class GoogleAuthController extends BaseController
             $googleUser = Socialite::driver('google')
                 ->stateless()
                 ->userFromToken($request->access_token);
-        }catch (InvalidStateException $e) {
-            return $this->SendError('error', "Unable to login with your Goole account!", 401);
+        } catch (\Exception $e) {
+            return apiResponse([], "Unable to login with your Google account!", 401);
         }
 
         $user = User::where('email', $googleUser->email)->first();
@@ -47,11 +43,11 @@ class GoogleAuthController extends BaseController
                 'password' => Hash::make(Str::random(8)),
             ]);
 
-            $profile = Profile::create([
+            Profile::create([
                 'user_id' => $user->id,
-                'bio' => NULL,
-                'city' => NULL,
-                'gender'=> NULL,
+                'bio' => null,
+                'city' => null,
+                'gender' => null,
                 'image' => $googleUser->avatar,
             ]);
         }
@@ -59,7 +55,7 @@ class GoogleAuthController extends BaseController
         $token = $user->createToken('Laravel-10-Sanctum')->plainTextToken;
         $success['token'] = $token;
         $success['user'] = new UserResource($user);
-        return $this->SendResponse($success, "User Login Successfully");
 
+        return apiResponse($success, "User logged in successfully.", 200);
     }
 }

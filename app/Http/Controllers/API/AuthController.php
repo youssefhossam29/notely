@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -15,7 +15,7 @@ use Illuminate\Validation\Rules\Password;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource as UserResource;
 
-class AuthController extends BaseController
+class AuthController extends Controller
 {
     //
     public function register(Request $request){
@@ -26,7 +26,7 @@ class AuthController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->SendError("validation error", $validator->errors());
+            return apiResponse("validation error", $validator->errors(), 422);
         }
 
         $user = User::create([
@@ -46,9 +46,9 @@ class AuthController extends BaseController
             $token = $user->createToken('Laravel-10-Sanctum')->plainTextToken;
             $success['token'] = $token;
             $success['user'] = new UserResource($user);
-            return $this->SendResponse($success, "User Login Successfully");
+            return apiResponse($success, "User logged in successfully", 200);
         }else{
-            return $this->SendError("Can't create account");
+            return apiResponse([], "Can't create account. Please try again later.", 500);
         }
     }
 
@@ -61,7 +61,7 @@ class AuthController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->SendError("validation error", $validator->errors());
+            return apiResponse("Validation error", $validator->errors(), 422);
         }
 
         if(auth()->attempt(['email' => $request->email, 'password' => $request->password])){
@@ -69,16 +69,16 @@ class AuthController extends BaseController
             $success['token'] = $token;
             $user = auth()->user();
             $success['user'] = new UserResource($user);
-            return $this->SendResponse($success, "User Login Successfully");
+            return apiResponse($success, "User logged in successfully", 200);
         }else{
-            return $this->SendError("Wrong E-mail or Password");
+            return apiResponse([], "Wrong email or password", 401);
         }
     }
 
 
     public function logout(Request $request){
         auth()->user()->tokens()->delete();
-        return $this->SendResponse("User Logged out successfully", "User Logged out successfully");
+        return apiResponse([], "User Logged out successfully", 200);
     }
 
 
@@ -91,7 +91,7 @@ class AuthController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->SendError("validation error", $validator->errors());
+            return apiResponse("Validation error", $validator->errors(), 422);
         }
 
         $request->user()->update([
@@ -100,6 +100,6 @@ class AuthController extends BaseController
 
         $user = auth()->user();
         $user = new UserResource($user);
-        return $this->SendResponse($user, "password-updated successfully");
+        return apiResponse($user, "Password updated successfully.", 200);
     }
 }
