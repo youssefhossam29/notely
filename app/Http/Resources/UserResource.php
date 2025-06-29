@@ -14,14 +14,6 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //return parent::toArray($request);
-        if ($this->profile->gender === null) {
-            $gender = 'not selected';
-        } elseif ($this->profile->gender == 1) {
-            $gender = 'male';
-        } else {
-            $gender = 'female';
-        }
 
         if(Str::startsWith($this->profile->image, 'https://')){
             $image = $this->profile->image;
@@ -36,7 +28,7 @@ class UserResource extends JsonResource
             'image' => $image,
             'bio' => $this->profile->bio,
             'city' => $this->profile->city,
-            'gender' => $gender,
+            'gender' => $this->gender_type,
             'created_at' => $this->created_at->format('d/m/y'),
             'updated_at' => $this->updated_at->format('d/m/y'),
         ];    }

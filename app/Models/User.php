@@ -53,4 +53,18 @@ class User extends Authenticatable
     public function note(){
         return $this->hasMany('App\Models\Note');
     }
+
+
+    public function getGenderTypeAttribute()
+    {
+        if ($this->profile && $this->profile->gender === null) {
+            return 'Not selected';
+        } elseif ($this->profile && $this->profile->gender == 1) {
+            return 'Male';
+        } elseif ($this->profile && $this->profile->gender == 0) {
+            return 'Female';
+        }
+        return 'Not selected';
+    }
+
 }
