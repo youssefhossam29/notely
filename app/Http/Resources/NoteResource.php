@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\NoteImageResource;
 
 class NoteResource extends JsonResource
 {
@@ -21,13 +22,7 @@ class NoteResource extends JsonResource
             'user_name' => $this->user->name,
             'title' => $this->title,
             'content' => $this->content,
-            'images' => $this->noteImages->map(function ($image) {
-            return [
-                    'id' => $image->id,
-                    'name' => $image->name,
-                    'url' => 'uploads/notes/' . $image->name,
-                ];
-            }),
+            'images' => NoteImageResource::collection($this->noteImages),
             'is_pinned' => $this->is_pinned ? 1 : 0,
             'deleted_at' => ($this->deleted_at == null ) ? null: $this->deleted_at->format('d/m/y'),
             'created_at' => $this->created_at->format('d/m/y'),
